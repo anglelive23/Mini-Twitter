@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.0" />
   </ItemGroup>
 
 </Project>

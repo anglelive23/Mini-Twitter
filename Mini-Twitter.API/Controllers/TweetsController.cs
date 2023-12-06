@@ -1,4 +1,12 @@
-﻿namespace Mini_Twitter.Controllers
+﻿using Microsoft.AspNetCore.OData.Deltas;
+using Mini_Twitter.Application.Features.Tweets.Commands.CreateTweetReply;
+using Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweet;
+using Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweetReply;
+using Mini_Twitter.Application.Features.Tweets.Commands.PatchTweet;
+using Mini_Twitter.Application.Features.Tweets.Commands.UpdateTweet;
+using Mini_Twitter.Application.Features.Tweets.Commands.UpdateTweetReply;
+
+namespace Mini_Twitter.Controllers
 {
     [Route("api/odata")]
     [Authorize]
@@ -56,6 +64,124 @@
 
             await cache.EvictByTagAsync("Tweets", cancellationToken);
             return Created(tweet);
+        }
+
+        [HttpPost("tweets({key})/replies")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Reply))]
+        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var reply = await _mediator
+                .Send(new CreateTweetReplyCommand
+                {
+                    Id = key,
+                    ReplyDto = replyDto
+                });
+
+            if (reply is null)
+                return BadRequest($"Tweet with id: {key} does not exist on the server!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+
+            return Created(reply);
+        }
+        #endregion
+
+        #region PUT
+        [HttpPut("tweets({key})")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpdateTweet(int key, [FromBody] UpdateTweetDto updateTweetDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var currentTweet = await _mediator
+                .Send(new UpdateTweetCommand
+                {
+                    Id = key,
+                    UpdateTweetDto = updateTweetDto
+                });
+
+            if (currentTweet == null)
+                return NotFound("Tweet not found!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPut("tweets({key})/replies({replyId})")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpdateReplyForTweet(int key, int replyId, [FromBody] UpdateTweetReplyDto replyDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var currentReply = await _mediator
+                .Send(new UpdateTweetReplyCommand
+                {
+                    TweetId = key,
+                    ReplyId = replyId,
+                    UpdateTweetReplyDto = replyDto
+                });
+
+            if (currentReply == null)
+                return NotFound("Tweet or Reply not found!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+
+            return NoContent();
+        }
+        #endregion
+
+        #region DELETE
+        [HttpPatch("tweets({key})")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> PartUpdateTweet(int key, Delta<Tweet> delta, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var currentTweet = await _mediator
+                .Send(new PatchTweetCommand
+                {
+                    Id = key,
+                    Delta = delta,
+                });
+
+            if (currentTweet is null)
+                return NotFound("Tweet not found!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+            return NoContent();
+        }
+        #endregion
+
+        #region DELETE
+        [HttpDelete("tweets({key})")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemoveTweet(int key, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var currentTweet = await _mediator
+                .Send(new DeleteTweetCommand
+                {
+                    Id = key
+                });
+
+            if (currentTweet is false)
+                return NotFound("Tweet not found!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+            return NoContent();
+        }
+
+        [HttpDelete("tweets({key})/replies({replyId})")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> RemoveReplyForTweet(int key, int replyId, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        {
+            var currentReply = await _mediator
+                .Send(new DeleteTweetReplyCommand
+                {
+                    TweetId = key,
+                    ReplyId = replyId,
+                });
+
+            if (currentReply is false)
+                return NotFound("Tweet or Reply not found!");
+
+            await cache.EvictByTagAsync("Tweets", cancellationToken);
+
+            return NoContent();
         }
         #endregion
     }

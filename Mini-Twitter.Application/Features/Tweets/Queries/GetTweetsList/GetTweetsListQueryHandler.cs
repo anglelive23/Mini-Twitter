@@ -16,7 +16,7 @@
         #region Interface Implementation
         public async Task<IQueryable<Tweet>> Handle(GetTweetsListQuery request, CancellationToken cancellationToken)
         {
-            var tweets = _repo.GetAll();
+            var tweets = _repo.GetAll(t => t.IsDeleted == false);
             return await Task.FromResult(tweets);
         }
         #endregion
