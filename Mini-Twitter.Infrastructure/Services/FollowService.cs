@@ -2,60 +2,68 @@
 {
     public class FollowService : IFollowService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        #region Fields and Properties
+        private readonly TwitterContext _context;
+        #endregion
 
-        public FollowService(UserManager<ApplicationUser> userManager)
+        #region Constructors
+        public FollowService(TwitterContext context)
         {
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+        #endregion
 
+        #region Follow & Unfollow
         public async Task<bool> FollowUserAsync(string followerId, string followeeId)
         {
-            var follower = await _userManager
-                .FindByIdAsync(followerId); // me
+            var follower = await GetUserByIdAsync(followerId);
+            var followee = await GetUserByIdAsync(followeeId);
 
-            var followee = await _userManager
-                .FindByIdAsync(followeeId); // other person
+            if (follower is null || followee is null || await FollowRelationshipExistsAsync(followerId, followee))
+                return false;
 
-            if (follower != null && followee != null)
-            {
-                follower.Followees.Add(followee);
-                followee.Followers.Add(follower);
+            follower.Followees.Add(followee);
+            follower.FollowingCount += 1;
+            followee.FollowersCount += 1;
+            await _context.SaveChangesAsync();
 
-                followee.FollowersCount += 1;
-                follower.FollowingCount += 1;
-                await _userManager.UpdateAsync(follower);
-                await _userManager.UpdateAsync(followee);
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         public async Task<bool> UnfollowUserAsync(string followerId, string followeeId)
         {
-            var follower = await _userManager
-                .FindByIdAsync(followerId);
+            var follower = await GetUserByIdAsync(followerId);
+            var followee = await GetUserByIdAsync(followeeId);
 
-            var followee = await _userManager
-                .FindByIdAsync(followeeId);
+            if (follower is null || followee is null || !await FollowRelationshipExistsAsync(followerId, followee))
+                return false;
 
-            if (follower != null && followee != null)
-            {
-                follower.Followees.Remove(followee);
-                followee.Followers.Remove(follower);
+            await _context.Database.ExecuteSqlRawAsync(
+                "DELETE FROM security.\"UserFollowers\" WHERE \"FolloweeId\" = {0} AND \"FollowerId\" = {1}",
+                followeeId, followerId);
 
+            followee.FollowersCount -= 1;
+            follower.FollowingCount -= 1;
+            await _context.SaveChangesAsync();
 
-                followee.FollowersCount -= 1;
-                follower.FollowingCount -= 1;
-                await _userManager.UpdateAsync(follower);
-                await _userManager.UpdateAsync(followee);
-
-                return true;
-            }
-
-            return false;
+            return true;
         }
+        #endregion
+
+        #region Helper methods
+        private async Task<ApplicationUser?> GetUserByIdAsync(string userId)
+        {
+            return await _context
+                .Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        private async Task<bool> FollowRelationshipExistsAsync(string followerId, ApplicationUser followee)
+        {
+            return await _context
+                .Users
+                .AnyAsync(f => f.Id == followerId && f.Followees.Contains(followee));
+        }
+        #endregion
     }
 }

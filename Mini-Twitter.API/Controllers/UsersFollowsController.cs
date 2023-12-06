@@ -2,14 +2,14 @@
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersFollowsController : ControllerBase
     {
         #region Fields and Properties
         private readonly IMediator _mediator;
         #endregion
 
         #region Constructors
-        public UsersController(IMediator mediator)
+        public UsersFollowsController(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
