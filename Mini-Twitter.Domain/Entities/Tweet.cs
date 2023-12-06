@@ -8,5 +8,7 @@
         public string Context { get; set; }
         public int LikesCount { get; set; }
         public int RetweetCount { get; set; }
+        [Contained]
+        public ICollection<Reply>? Replies { get; set; }
     }
 }
