@@ -40,6 +40,7 @@
             services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
             services.AddScoped<ITweetRepository, TweetRepository>();
             services.AddScoped<IFollowService, FollowService>();
+            services.AddScoped<IUserRepository, UserRepository>();
             #endregion
 
             return services;

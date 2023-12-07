@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.OData.Deltas;
-using Mini_Twitter.Application.Features.Tweets.Commands.CreateTweetReply;
-using Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweet;
-using Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweetReply;
-using Mini_Twitter.Application.Features.Tweets.Commands.PatchTweet;
-using Mini_Twitter.Application.Features.Tweets.Commands.UpdateTweet;
-using Mini_Twitter.Application.Features.Tweets.Commands.UpdateTweetReply;
-
-namespace Mini_Twitter.Controllers
+﻿namespace Mini_Twitter.Controllers
 {
     [Route("api/odata")]
     [Authorize]

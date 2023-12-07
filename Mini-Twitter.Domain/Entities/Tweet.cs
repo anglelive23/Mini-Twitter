@@ -10,5 +10,7 @@
         public int RetweetCount { get; set; }
         [Contained]
         public ICollection<Reply>? Replies { get; set; }
+        [Contained]
+        public ICollection<Retweet>? Retweets { get; set; }
     }
 }

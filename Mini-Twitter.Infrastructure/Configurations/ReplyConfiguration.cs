@@ -13,8 +13,8 @@
             builder.Property(x => x.UserId)
                 .IsRequired();
 
-            builder.Property(x => x.TweetId)
-                .IsRequired();
+            //builder.Property(x => x.TweetId)
+            //    .IsRequired();
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
