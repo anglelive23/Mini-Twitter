@@ -1,0 +1,927 @@
+{
+	"info": {
+		"_postman_id": "08f45dae-7e10-42fa-b538-16e592ab5a7d",
+		"name": "Mini-Twitter",
+		"description": "In this case study, we will explore the process of developing a backend system for a mini Twitter-like  \napplication using C# .NET Core.  \nThe application's primary functions includes user management, tweeting, following/followers functionality, retweets, replies, likes, and a timeline displaying tweets from a user's followers.  \nThe application employs JWT for authentication and have CORS enabled for secure API access.  \nPostgreSQL is used as the database management system.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19410428"
+	},
+	"item": [
+		{
+			"name": "AllTweetsWithReplies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets?$expand=replies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets"
+					],
+					"query": [
+						{
+							"key": "$expand",
+							"value": "replies"
+						}
+					]
+				},
+				"description": "#### Get All tweets including replies on each tweet."
+			},
+			"response": []
+		},
+		{
+			"name": "TweetByIdWithReplies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})?$expand=replies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})"
+					],
+					"query": [
+						{
+							"key": "$expand",
+							"value": "replies"
+						}
+					]
+				},
+				"description": "#### Get a specific tweet by Id and include all replies on that tweet\n\n### **(1) is the tweet Id**"
+			},
+			"response": []
+		},
+		{
+			"name": "PostTweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"bbdacf74-35ff-41f4-84c6-9c0d2cc6562d\",\r\n    \"context\": \"Tweet Add!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets"
+					]
+				},
+				"description": "#### Post a new Tweet for a specific User.\n\n#### UserId: the Id of the user posting the tweet.\n\n#### Context: the context of the tweet."
+			},
+			"response": []
+		},
+		{
+			"name": "PostTweetReply",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"context\": \"Fourth Reply!\",\r\n  \"userId\": \"bbdacf74-35ff-41f4-84c6-9c0d2cc6562d\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})/replies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})",
+						"replies"
+					]
+				},
+				"description": "#### Post a Reply for a specific Tweet.\n\n#### (1) -> 1 represent the tweet ID that we are posting the reply against in the URL.\n\n#### UserId: The user posting the reply.\n\n#### Context: the context of the reply."
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"context\": \"Test Edit Tweet!!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})"
+					]
+				},
+				"description": "#### Update the context of a tweet.\n\n#### (1) -> the Id of the tweet we are editing.\n\n#### Context: the new context that replaces the old one."
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateTweetReply",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"context\": \"Third Reply Edited!!!!!aaa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})/replies({{ReplyId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})",
+						"replies({{ReplyId}})"
+					]
+				},
+				"description": "#### Update specific Reply on a specific tweet.\n\n#### tweets(1)/replies(3) -> tweetId 1, ReplyId 3\n\n#### Why is it made like that ?\n\n#### Because you can't access your reply without accessing the tweet itself so you must provide the tweetId and the replyId alongside the new context of the reply."
+			},
+			"response": []
+		},
+		{
+			"name": "TweetPatch - Mainly for Likes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"likesCount\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})"
+					]
+				},
+				"description": "#### This patch endpoint is mainly used to update the likes count of a tweet, it can be used to patch any property in the tweet.\n\n#### (1) -> the Tweet Id.\n\n#### Likes Count: the new likes count\n\n#### How will it work on a real scenario ?\n\n#### The frontend will have the existing likes count so whenever a new user click on the like/dislike button he will send the new number to this endpoint to patch it on the database."
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})"
+					]
+				},
+				"description": "#### Delete a Tweet\n\n#### (1) -> tweet Id\n\n#### NOTE: Deleting a tweet will automatically deletes all it's replies\n\n#### How delete works ?\n\n#### I mark it's IsDeleted Boolean property as TRUE, meaning it still exist in the database but it won't show up anymore."
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTweetReply",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/tweets({{TweetId}})/replies({{ReplyId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"tweets({{TweetId}})",
+						"replies({{ReplyId}})"
+					]
+				},
+				"description": "#### Delete a specific reply on a specific tweet.\n\n#### tweets(1) -> 1 is the tweet id.\n\n#### replies(3) -> 3 is the reply id.\n\n#### And again you can't access any reply without accessing the tweet itself so whenever we are dealing with a reply we must provide the tweet itself."
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"Ahmed.Allam@test.com\",\r\n  \"password\": \"P@ssword1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/Auth/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"Auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Ahmed1\",\r\n  \"lastName\": \"Allam1\",\r\n  \"userName\": \"Ahmed1.Allam\",\r\n  \"email\": \"Ahmed1.Allam@test.com\",\r\n  \"password\": \"P@ssword1234\",\r\n  \"phoneNumber\": \"01551548360\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/Auth/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"Auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/UsersFollows/follow?followerId=2003e784-b074-41a2-bd36-a870acf870a8&followeeId=3c28a1ae-25d4-4849-8c26-aca8d2be3b10",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"UsersFollows",
+						"follow"
+					],
+					"query": [
+						{
+							"key": "followerId",
+							"value": "2003e784-b074-41a2-bd36-a870acf870a8"
+						},
+						{
+							"key": "followeeId",
+							"value": "3c28a1ae-25d4-4849-8c26-aca8d2be3b10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unfollow",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/UsersFollows/unfollow?followerId=2003e784-b074-41a2-bd36-a870acf870a8&followeeId=3c28a1ae-25d4-4849-8c26-aca8d2be3b10",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"UsersFollows",
+						"unfollow"
+					],
+					"query": [
+						{
+							"key": "followerId",
+							"value": "2003e784-b074-41a2-bd36-a870acf870a8"
+						},
+						{
+							"key": "followeeId",
+							"value": "3c28a1ae-25d4-4849-8c26-aca8d2be3b10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserRetweet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tweetId\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/retweets",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"retweets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile (Basic Info + tweets + retweets)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})?select=id,firstName,lastName,bio,followersCount,followingCount,createdDate,phoneNumber&$expand=tweets,retweets($expand=tweet)",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})"
+					],
+					"query": [
+						{
+							"key": "select",
+							"value": "id,firstName,lastName,bio,followersCount,followingCount,createdDate,phoneNumber"
+						},
+						{
+							"key": "$expand",
+							"value": "tweets,retweets($expand=tweet)"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})"
+					],
+					"query": [
+						{
+							"key": "$select",
+							"value": "firstname,lastname,bio,followersCount,followingCount,createdDate,phoneNumber",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserTweets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/tweets",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"tweets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserTweetsWithReplies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/tweets?$expand=replies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"tweets"
+					],
+					"query": [
+						{
+							"key": "$expand",
+							"value": "replies"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserTweetById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/tweets({{TweetId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"tweets({{TweetId}})"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserTweetByIdWithReplies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/tweets({{TweetId}})?$expand=replies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"tweets({{TweetId}})"
+					],
+					"query": [
+						{
+							"key": "$expand",
+							"value": "replies"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserRetweets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/retweets",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"retweets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserRetweetById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})/retweets({{RetweetId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})",
+						"retweets({{RetweetId}})"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/odata/applicationusers({{UserId}})",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"odata",
+						"applicationusers({{UserId}})"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Timeline",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBaG1lZC5BbGxhbSIsImp0aSI6IjllNGY5MzUyLTBlMTctNDg3ZC1iNTYyLThlMTBlYmMyMGZkYiIsImVtYWlsIjoiQWhtZWQuQWxsYW1AdGVzdC5jb20iLCJ1aWQiOiIzYzI4YTFhZS0yNWQ0LTQ4NDktOGMyNi1hY2E4ZDJiZTNiMTAiLCJyb2xlcyI6IlVzZXIiLCJleHAiOjE3MDI3NDc5MjEsImlzcyI6Ik1pbmktVHdpdHRlci5BUEkiLCJhdWQiOiJNaW5pLVR3aXR0ZXIuV2Vic2l0ZSJ9.U8IXHKMkLmJHsuHBWcExLgHrbY9HmbayvhTuIEftUPE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7064/api/TimeLines/{{UserId}}?pageNumber={{PageNumber}}&pageSize={{PageSize}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7064",
+					"path": [
+						"api",
+						"TimeLines",
+						"{{UserId}}"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "{{PageNumber}}"
+						},
+						{
+							"key": "pageSize",
+							"value": "{{PageSize}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "TweetId",
+			"value": "1"
+		},
+		{
+			"key": "ReplyId",
+			"value": "3"
+		},
+		{
+			"key": "UserId",
+			"value": "3c28a1ae-25d4-4849-8c26-aca8d2be3b10",
+			"type": "string"
+		},
+		{
+			"key": "RetweetId",
+			"value": "7",
+			"type": "string"
+		},
+		{
+			"key": "PageNumber",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "PageSize",
+			"value": "10",
+			"type": "string"
+		}
+	]
+}
