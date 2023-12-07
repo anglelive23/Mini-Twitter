@@ -41,6 +41,7 @@
             services.AddScoped<ITweetRepository, TweetRepository>();
             services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITimelineRepository, TimelineRepository>();
             #endregion
 
             return services;

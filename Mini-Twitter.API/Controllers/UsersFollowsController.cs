@@ -2,6 +2,7 @@
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersFollowsController : ControllerBase
     {
         #region Fields and Properties

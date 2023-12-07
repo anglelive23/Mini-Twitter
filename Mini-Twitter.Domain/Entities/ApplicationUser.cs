@@ -4,24 +4,24 @@
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Bio { get; set; }
+        public string? Bio { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastModifiedDate { get; set; }
         [Contained]
-        public IList<Tweet>? Tweets { get; set; }
+        public ICollection<Tweet>? Tweets { get; set; }
         [Contained]
         public ICollection<Retweet>? Retweets { get; set; }
         public ICollection<ApplicationUser> Followers { get; set; }
         public ICollection<ApplicationUser> Followees { get; set; }
         public IList<RefreshToken>? RefreshTokens { get; set; }
-
+        public bool IsDeleted { get; set; }
         public ApplicationUser()
         {
             Followers = new List<ApplicationUser>();
             Followees = new List<ApplicationUser>();
-            Tweets = new List<Tweet>();
+            //Tweets = new List<Tweet>();
             RefreshTokens = new List<RefreshToken>();
         }
     }

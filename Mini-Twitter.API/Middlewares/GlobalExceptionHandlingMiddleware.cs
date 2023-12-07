@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mini_Twitter.Middlewares
+﻿namespace Mini_Twitter.Middlewares
 {
     public class GlobalExceptionHandlingMiddleware
     {

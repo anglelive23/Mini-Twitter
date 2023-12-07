@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mini_Twitter.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mini_Twitter.Infrastructure.Migrations
 {
     [DbContext(typeof(TwitterContext))]
-    partial class TwitterContextModelSnapshot : ModelSnapshot
+    [Migration("20231207120538_AddAuditableEntityToRetweetTable")]
+    partial class AddAuditableEntityToRetweetTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -326,7 +329,7 @@ namespace Mini_Twitter.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Replies", (string)null);
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("Mini_Twitter.Domain.Entities.Retweet", b =>
@@ -361,7 +364,7 @@ namespace Mini_Twitter.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Retweets", (string)null);
+                    b.ToTable("Retweets");
                 });
 
             modelBuilder.Entity("Mini_Twitter.Domain.Entities.Tweet", b =>
@@ -406,7 +409,7 @@ namespace Mini_Twitter.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tweets", (string)null);
+                    b.ToTable("Tweets");
                 });
 
             modelBuilder.Entity("Mini_Twitter.Domain.Entities.UserFollowers", b =>
