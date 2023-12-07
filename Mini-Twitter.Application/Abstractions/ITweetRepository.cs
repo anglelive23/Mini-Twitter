@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.OData.Deltas;
-
-namespace Mini_Twitter.Application.Abstractions
+﻿namespace Mini_Twitter.Application.Abstractions
 {
     public interface ITweetRepository : IAsyncRepository<Tweet>
     {

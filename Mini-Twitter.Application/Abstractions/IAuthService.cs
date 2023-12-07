@@ -1,7 +1,4 @@
-﻿using Mini_Twitter.Application.Models;
-using Mini_Twitter.Domain.Entities;
-
-namespace Mini_Twitter.Application.Abstractions
+﻿namespace Mini_Twitter.Application.Abstractions
 {
     public interface IAuthService
     {

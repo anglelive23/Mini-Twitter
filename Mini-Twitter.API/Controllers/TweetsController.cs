@@ -119,7 +119,7 @@
         }
         #endregion
 
-        #region DELETE
+        #region PATCH
         [HttpPatch("tweets({key})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PartUpdateTweet(int key, Delta<Tweet> delta, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)

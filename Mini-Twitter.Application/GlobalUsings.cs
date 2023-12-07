@@ -9,3 +9,4 @@ global using Mini_Twitter.Domain.Entities;
 global using Mini_Twitter.Application.Models.Dtos;
 global using Microsoft.OData.Edm;
 global using Microsoft.OData.ModelBuilder;
+global using Microsoft.AspNetCore.OData.Deltas;

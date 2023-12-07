@@ -21,6 +21,9 @@
 
             builder.Property(u => u.FollowingCount)
                .HasDefaultValue(0);
+
+            builder.Property(u => u.IsDeleted)
+                .HasDefaultValue(false);
         }
     }
 }

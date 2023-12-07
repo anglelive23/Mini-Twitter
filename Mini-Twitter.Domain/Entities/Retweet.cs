@@ -1,6 +1,6 @@
 ﻿namespace Mini_Twitter.Domain.Entities
 {
-    public class Retweet
+    public class Retweet : AuditableEntity
     {
         public int Id { get; set; }
         public ApplicationUser? User { get; set; }

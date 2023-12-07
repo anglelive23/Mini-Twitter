@@ -6,6 +6,7 @@
         public DbSet<Tweet> Tweets { get; set; }
         public DbSet<Reply> Replies { get; set; }
         public DbSet<Retweet> Retweets { get; set; }
+        public DbSet<UserFollowers> UserFollowers { get; set; }
         //public DbSet<UserTweet> UserTweets { get; set; }
 
 
