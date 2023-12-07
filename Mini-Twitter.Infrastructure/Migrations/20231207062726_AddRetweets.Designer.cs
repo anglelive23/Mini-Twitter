@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mini_Twitter.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mini_Twitter.Infrastructure.Migrations
 {
     [DbContext(typeof(TwitterContext))]
-    partial class TwitterContextModelSnapshot : ModelSnapshot
+    [Migration("20231207062726_AddRetweets")]
+    partial class AddRetweets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,10 +306,7 @@ namespace Mini_Twitter.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("RetweetId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("TweetId")
+                    b.Property<int>("TweetId")
                         .HasColumnType("integer");
 
                     b.Property<string>("UserId")
@@ -314,8 +314,6 @@ namespace Mini_Twitter.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RetweetId");
 
                     b.HasIndex("TweetId");
 
@@ -468,21 +466,17 @@ namespace Mini_Twitter.Infrastructure.Migrations
 
             modelBuilder.Entity("Mini_Twitter.Domain.Entities.Reply", b =>
                 {
-                    b.HasOne("Mini_Twitter.Domain.Entities.Retweet", "Retweet")
-                        .WithMany("Replies")
-                        .HasForeignKey("RetweetId");
-
                     b.HasOne("Mini_Twitter.Domain.Entities.Tweet", "Tweet")
                         .WithMany("Replies")
-                        .HasForeignKey("TweetId");
+                        .HasForeignKey("TweetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Mini_Twitter.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Retweet");
 
                     b.Navigation("Tweet");
 
@@ -545,11 +539,6 @@ namespace Mini_Twitter.Infrastructure.Migrations
                     b.Navigation("Retweets");
 
                     b.Navigation("Tweets");
-                });
-
-            modelBuilder.Entity("Mini_Twitter.Domain.Entities.Retweet", b =>
-                {
-                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("Mini_Twitter.Domain.Entities.Tweet", b =>

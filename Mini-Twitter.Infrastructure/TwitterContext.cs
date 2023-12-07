@@ -5,6 +5,7 @@
         public TwitterContext(DbContextOptions<TwitterContext> options) : base(options) { }
         public DbSet<Tweet> Tweets { get; set; }
         public DbSet<Reply> Replies { get; set; }
+        public DbSet<Retweet> Retweets { get; set; }
         //public DbSet<UserTweet> UserTweets { get; set; }
 
 

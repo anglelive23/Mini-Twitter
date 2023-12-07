@@ -9,8 +9,10 @@
         public int FollowingCount { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastModifiedDate { get; set; }
+        [Contained]
         public IList<Tweet>? Tweets { get; set; }
-
+        [Contained]
+        public ICollection<Retweet>? Retweets { get; set; }
         public ICollection<ApplicationUser> Followers { get; set; }
         public ICollection<ApplicationUser> Followees { get; set; }
         public IList<RefreshToken>? RefreshTokens { get; set; }
