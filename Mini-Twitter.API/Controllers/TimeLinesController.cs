@@ -27,6 +27,9 @@
                     PageSize = pageSize
                 });
 
+            if (timeline == null)
+                return NotFound();
+
             return Ok(timeline);
         }
         #endregion

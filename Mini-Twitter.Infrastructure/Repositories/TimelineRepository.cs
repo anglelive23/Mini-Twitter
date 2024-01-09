@@ -4,22 +4,24 @@
     {
         #region Fields and Properties
         private readonly TwitterContext _context;
+        private readonly IUserService _userService;
         #endregion
 
         #region Constructors
-        public TimelineRepository(TwitterContext context)
+        public TimelineRepository(TwitterContext context, IUserService userService)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
         #endregion
 
         #region Interface Implementation
         public List<Tweet>? GetTimeLineForAUser(string userId, int pageNumer, int pageSize)
         {
-            if (!IsExistingUser(userId))
+            if (!_userService.IsExistingUser(userId))
                 return null;
 
-            var listOfFollowers = GetFollowersList(userId);
+            var listOfFollowers = _userService.GetFollowersList(userId);
 
             var timeline = _context
                 .Tweets
@@ -30,24 +32,6 @@
                 .ToList();
 
             return timeline;
-        }
-        #endregion
-
-        #region Helper methods
-        private List<string> GetFollowersList(string userId)
-        {
-            return _context
-                .UserFollowers
-                .Where(f => f.FollowerId == userId)
-                .Select(f => f.FolloweeId)
-                .ToList();
-        }
-
-        private bool IsExistingUser(string userId)
-        {
-            return _context
-                .Users
-                .Any(u => u.Id == userId && u.IsDeleted == false);
         }
         #endregion
     }

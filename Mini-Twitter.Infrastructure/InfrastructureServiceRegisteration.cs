@@ -42,6 +42,7 @@
             services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITimelineRepository, TimelineRepository>();
+            services.AddScoped<IUserService, UserService>();
             #endregion
 
             return services;
