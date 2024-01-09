@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mini_Twitter.Tests.ControllersTests
+namespace Mini_Twitter.Tests.Controllers
 {
     public class TweetsControllerTests
     {

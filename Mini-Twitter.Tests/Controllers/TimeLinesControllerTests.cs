@@ -8,7 +8,7 @@ using Mini_Twitter.Controllers;
 using Mini_Twitter.Domain.Entities;
 using Moq;
 
-namespace Mini_Twitter.Tests.ControllersTests
+namespace Mini_Twitter.Tests.Controllers
 {
     public class TimeLinesControllerTests
     {

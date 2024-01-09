@@ -9,7 +9,7 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Mini_Twitter.Tests.RepositoriesTests
+namespace Mini_Twitter.Tests.Repositories
 {
     public class TimelineRepositoryTests
     {
