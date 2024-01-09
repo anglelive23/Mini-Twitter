@@ -2,11 +2,12 @@
 {
     public class TwitterContext : IdentityDbContext<ApplicationUser>
     {
+        public TwitterContext() { }
         public TwitterContext(DbContextOptions<TwitterContext> options) : base(options) { }
-        public DbSet<Tweet> Tweets { get; set; }
-        public DbSet<Reply> Replies { get; set; }
-        public DbSet<Retweet> Retweets { get; set; }
-        public DbSet<UserFollowers> UserFollowers { get; set; }
+        public virtual DbSet<Tweet> Tweets { get; set; }
+        public virtual DbSet<Reply> Replies { get; set; }
+        public virtual DbSet<Retweet> Retweets { get; set; }
+        public virtual DbSet<UserFollowers> UserFollowers { get; set; }
         //public DbSet<UserTweet> UserTweets { get; set; }
 
 

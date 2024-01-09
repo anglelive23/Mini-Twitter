@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mini-Twitter.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mini-Twitter.Application", "Mini-Twitter.Application\Mini-Twitter.Application.csproj", "{F3FEEEF8-AE7A-4397-834F-E0B1A17773C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini-Twitter.Tests", "Mini-Twitter.Tests\Mini-Twitter.Tests.csproj", "{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F3FEEEF8-AE7A-4397-834F-E0B1A17773C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3FEEEF8-AE7A-4397-834F-E0B1A17773C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3FEEEF8-AE7A-4397-834F-E0B1A17773C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
