@@ -11,7 +11,7 @@ using Moq.EntityFrameworkCore;
 using Mini_Twitter.Infrastructure.Services;
 using FluentAssertions;
 
-namespace Mini_Twitter.Tests.ServicesTests
+namespace Mini_Twitter.Tests.Services
 {
     public class UserSerivceTests
     {
