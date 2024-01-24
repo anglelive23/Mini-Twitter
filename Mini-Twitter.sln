@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mini-Twitter.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mini-Twitter.Application", "Mini-Twitter.Application\Mini-Twitter.Application.csproj", "{F3FEEEF8-AE7A-4397-834F-E0B1A17773C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini-Twitter.Tests", "Mini-Twitter.Tests\Mini-Twitter.Tests.csproj", "{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mini-Twitter.Tests", "Mini-Twitter.Tests\Mini-Twitter.Tests.csproj", "{3F17BC0A-42C3-4DDF-8130-2B7B79EF914E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA4522EC-9B38-4BC1-8F9E-D16463063AFD}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
