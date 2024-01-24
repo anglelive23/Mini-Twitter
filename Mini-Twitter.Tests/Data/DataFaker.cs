@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Mini_Twitter.Tests.Data
 {
-    public static class DataFaker
+    public class DataFaker
     {
+        private static List<ApplicationUser> Users = GetUsers();
+        private static List<Tweet> Tweets = GetTweets();
+        private static List<UserFollowers> UserFollowers = GetFollowersList();
+
+
+
         public static List<ApplicationUser> GetUsers()
         {
             return new List<ApplicationUser>
