@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:80"
+    networks:
+      - net1
+    depends_on:
+      - postgreSQLServer
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=dbserver;Port=5432;Database=MiniTwitter;User Id=postgres;Password=1498AA!
+
+  postgreSQLServer:
+    image: postgres:latest
+    networks:
+      - net1
+    hostname: dbserver
+    environment:
+      - POSTGRES_PASSWORD=1498AA!
+    ports:
+      - "5432:5432"
+
+networks:
+  net1:
