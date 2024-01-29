@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
@@ -69,23 +67,3 @@ app.UseOutputCache();
 app.MapCarter();
 
 app.Run();
-
-
-void EnsureDatabaseCreationAndUpdateToLastMigration(IServiceCollection services)
-{
-    using (var serviceScope = services.BuildServiceProvider().CreateScope())
-    {
-        var dbContext = serviceScope.ServiceProvider.GetRequiredService<TwitterContext>();
-
-        var appliedMigrations = dbContext.Database.GetAppliedMigrations().ToList();
-        var allMigrations = dbContext.Database.GetMigrations().ToList();
-
-        if (!appliedMigrations.SequenceEqual(allMigrations))
-        {
-            dbContext.Database.Migrate();
-            Log.Information("Database updated to last migration.");
-        }
-
-        Log.Information("Database already up to date.");
-    }
-}
