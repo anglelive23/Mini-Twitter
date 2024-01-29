@@ -42,8 +42,6 @@ builder.Services
     .AddAPIServices(builder)
     .AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddCarter();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,8 +60,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.MapControllers();
+app.MapCarter();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseOutputCache();
-app.MapCarter();
 
 app.Run();
