@@ -45,3 +45,5 @@ global using Mini_Twitter.Application.Features.Users.Queries.GetUserRetweetDetai
 global using Mini_Twitter.Application.Features.Users.Queries.GetUserRetweetsList;
 global using Mini_Twitter.Application.Features.Users.Queries.GetUserTweetDetails;
 global using Mini_Twitter.Application.Features.Users.Queries.GetUserTweetsList;
+global using Carter;
+global using Microsoft.EntityFrameworkCore;

@@ -44,16 +44,19 @@ builder.Services
     .AddAPIServices(builder)
     .AddInfrastructureServices(builder.Configuration);
 
-EnsureDatabaseCreationAndUpdateToLastMigration(builder.Services);
+builder.Services.AddCarter();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
-app.UseSwaggerUI();
-//}
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
+    });
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -63,6 +66,8 @@ app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.MapControllers();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseOutputCache();
+app.MapCarter();
+
 app.Run();
 
 

@@ -40,7 +40,7 @@
                         {
                             ErrorCode = errorCode,
                             Message = "An error occurred in Application Layer.",
-                            ErrorMessage = applicationException.InnerException.Message ?? applicationException.Message
+                            ErrorMessage = applicationException.InnerException!.Message ?? applicationException.Message
                         });
                     }
 
