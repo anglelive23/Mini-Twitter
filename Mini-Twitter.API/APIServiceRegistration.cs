@@ -30,6 +30,10 @@
             builder.Services.AddCors();
             #endregion
 
+            #region Carter [Minimal API's]
+            services.AddCarter();
+            #endregion
+
             return services;
         }
     }
