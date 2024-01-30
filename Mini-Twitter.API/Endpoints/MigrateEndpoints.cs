@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Endpoints
+﻿namespace Mini_Twitter.API.Endpoints
 {
     public class MigrateEndpoints : CarterModule
     {

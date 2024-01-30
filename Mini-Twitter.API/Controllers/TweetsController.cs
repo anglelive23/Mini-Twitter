@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Controllers
+﻿namespace Mini_Twitter.API.Controllers
 {
     [Route("api/odata")]
     [Authorize]
@@ -19,7 +19,7 @@
         [HttpGet("tweets")]
         [OutputCache(PolicyName = "Tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IQueryable<Tweet>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllTweets()
         {
             var tweets = await _mediator
@@ -30,7 +30,7 @@
         [HttpGet("tweets({key})")]
         [OutputCache(PolicyName = "Tweet")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Tweet))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTweetById(int key)
         {
             var address = await _mediator
@@ -45,7 +45,7 @@
 
         #region Post
         [HttpPost("tweets")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tweet))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> AddTweet([FromBody] CreateTweetDto tweetDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
         {
             var tweet = await _mediator
@@ -59,7 +59,7 @@
         }
 
         [HttpPost("tweets({key})/replies")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Reply))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
         {
             var reply = await _mediator
@@ -122,7 +122,7 @@
         #region PATCH
         [HttpPatch("tweets({key})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> PartUpdateTweet(int key, Delta<Tweet> delta, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> PartUpdateTweet(int key, Delta<Domain.Entities.Tweet> delta, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
         {
             var currentTweet = await _mediator
                 .Send(new PatchTweetCommand

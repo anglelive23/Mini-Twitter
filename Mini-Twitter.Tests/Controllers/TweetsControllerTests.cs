@@ -11,7 +11,7 @@ using Mini_Twitter.Application.Features.Tweets.Commands.UpdateTweetReply;
 using Mini_Twitter.Application.Features.Tweets.Queries.GetTweetDetails;
 using Mini_Twitter.Application.Features.Tweets.Queries.GetTweetsList;
 using Mini_Twitter.Application.Models.Dtos;
-using Mini_Twitter.Controllers;
+using Mini_Twitter.API.Controllers;
 using Mini_Twitter.Domain.Entities;
 using Moq;
 using System;

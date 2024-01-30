@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Bases
+﻿namespace Mini_Twitter.API.Bases
 {
     public class AuthBaseModel : ControllerBase
     {

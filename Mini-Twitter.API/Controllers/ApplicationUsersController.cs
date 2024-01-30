@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Controllers
+﻿namespace Mini_Twitter.API.Controllers
 {
     [Route("api/odata")]
     [Authorize]
@@ -18,7 +18,7 @@
         #region GET
         [HttpGet("applicationusers({key:guid})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApplicationUser))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUserById(string key)
         {
             var user = await _mediator
@@ -31,7 +31,7 @@
 
         [HttpGet("applicationusers({key:guid})/tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IQueryable<Tweet>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTweetsForUser(string key)
         {
             var tweets = await _mediator
@@ -44,7 +44,7 @@
 
         [HttpGet("applicationusers({key:guid})/tweets({tweetKey})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Tweet))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTweetByIdForUser(string key, int tweetKey)
         {
             var tweet = await _mediator
@@ -58,7 +58,7 @@
 
         [HttpGet("applicationusers({key:guid})/retweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IQueryable<Retweet>))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetRetweetsForUser(string key)
         {
             var retweets = await _mediator
@@ -71,7 +71,7 @@
 
         [HttpGet("applicationusers({key:guid})/retweets({retweetKey})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Retweet))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetRetweetByIdForUser(string key, int retweetKey)
         {
             var retweet = await _mediator
@@ -86,7 +86,7 @@
 
         #region POST
         [HttpPost("applicationusers({key:guid})/retweets")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Retweet))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> AddRetweetForUser(string key, [FromBody] CreateRetweetDto retweetDto)
         {
             var retweet = await _mediator

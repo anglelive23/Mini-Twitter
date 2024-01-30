@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Mini_Twitter.Application.Features.Timelines.Queries.GetTimeline;
-using Mini_Twitter.Controllers;
+using Mini_Twitter.API.Controllers;
 using Mini_Twitter.Domain.Entities;
 using Moq;
 
