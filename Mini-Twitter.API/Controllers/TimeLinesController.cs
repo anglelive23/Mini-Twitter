@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Controllers
+﻿namespace Mini_Twitter.API.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]

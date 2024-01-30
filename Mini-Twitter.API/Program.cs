@@ -1,3 +1,5 @@
+using Mini_Twitter.API;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>

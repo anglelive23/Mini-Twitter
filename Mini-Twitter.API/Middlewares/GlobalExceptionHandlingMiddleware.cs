@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Middlewares
+﻿namespace Mini_Twitter.API.Middlewares
 {
     public class GlobalExceptionHandlingMiddleware
     {

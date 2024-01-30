@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter
+﻿namespace Mini_Twitter.API
 {
     public static class APIServiceRegistration
     {

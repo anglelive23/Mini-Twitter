@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Mini_Twitter</RootNamespace>
+    <RootNamespace>Mini_Twitter.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

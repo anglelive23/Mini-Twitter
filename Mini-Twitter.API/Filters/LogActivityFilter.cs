@@ -1,4 +1,4 @@
-﻿namespace Mini_Twitter.Filters
+﻿namespace Mini_Twitter.API.Filters
 {
     public class LogActivityFilter : IActionFilter
     {
