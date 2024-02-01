@@ -1,16 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Mini_Twitter.Application</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Mini-Twitter.Domain\Mini-Twitter.Domain.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
@@ -18,5 +15,4 @@
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.0" />
   </ItemGroup>
-
 </Project>
