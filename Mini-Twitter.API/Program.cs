@@ -13,6 +13,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<SwaggerIgnoreOdataOptionsFilter>();
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Mini-Twitter.API", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

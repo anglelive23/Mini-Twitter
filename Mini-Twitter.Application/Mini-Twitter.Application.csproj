@@ -9,10 +9,13 @@
     <ProjectReference Include="..\Mini-Twitter.Domain\Mini-Twitter.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.AspNetCore.OData.EFCore" Version="4.0.2" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
   </ItemGroup>
 </Project>

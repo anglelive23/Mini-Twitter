@@ -34,6 +34,16 @@
             services.AddCarter();
             #endregion
 
+            #region Redis
+            services.AddStackExchangeRedisCache(options =>
+            {
+                // Dynamic according to current work env.
+                options.Configuration = builder.Environment.IsDevelopment()
+                    ? "localhost:6379"
+                    : builder.Configuration.GetConnectionString("Redis");
+            });
+            #endregion
+
             return services;
         }
     }

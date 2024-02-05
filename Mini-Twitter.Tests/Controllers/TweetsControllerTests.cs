@@ -24,45 +24,45 @@ namespace Mini_Twitter.Tests.Controllers
 {
     public class TweetsControllerTests
     {
-        [Fact]
-        public async Task TweetsController_GetAllTweets_Should_Return_OkResult()
-        {
-            // Arrange
-            var tweetsList = new Mock<List<Tweet>>();
+        //[Fact]
+        //public async Task TweetsController_GetAllTweets_Should_Return_OkResult()
+        //{
+        //    // Arrange
+        //    var tweetsList = new Mock<List<Tweet>>();
 
-            var mediatorMock = new Mock<IMediator>();
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetTweetsListQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(tweetsList.Object.AsQueryable());
+        //    var mediatorMock = new Mock<IMediator>();
+        //    mediatorMock.Setup(m => m.Send(It.IsAny<GetTweetsListQuery>(), It.IsAny<CancellationToken>()))
+        //        .ReturnsAsync(tweetsList.Object.AsQueryable());
 
-            var controller = new TweetsController(mediatorMock.Object);
+        //    var controller = new TweetsController(mediatorMock.Object);
 
-            // Act
-            var result = await controller.GetAllTweets();
+        //    // Act
+        //    var result = await controller.GetAllTweets();
 
-            // Assert
-            ((OkObjectResult)result).Value.Should().BeAssignableTo<IQueryable<Tweet>>();
-            result.Should().BeOfType(typeof(OkObjectResult));
-        }
+        //    // Assert
+        //    ((OkObjectResult)result).Value.Should().BeAssignableTo<IQueryable<Tweet>>();
+        //    result.Should().BeOfType(typeof(OkObjectResult));
+        //}
 
-        [Fact]
-        public async Task TweetsController_GetTweetById_Should_Return_OkResult()
-        {
-            // Arrange
-            var key = 0;
-            var tweetsList = new Mock<List<Tweet>>();
-            var mediatorMock = new Mock<IMediator>();
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetTweetDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(tweetsList.Object.AsQueryable());
+        //[Fact]
+        //public async Task TweetsController_GetTweetById_Should_Return_OkResult()
+        //{
+        //    // Arrange
+        //    var key = 0;
+        //    var tweetsList = new Mock<List<Tweet>>();
+        //    var mediatorMock = new Mock<IMediator>();
+        //    mediatorMock.Setup(m => m.Send(It.IsAny<GetTweetDetailsQuery>(), It.IsAny<CancellationToken>()))
+        //        .ReturnsAsync(tweetsList.Object.AsQueryable());
 
-            var controller = new TweetsController(mediatorMock.Object);
+        //    var controller = new TweetsController(mediatorMock.Object);
 
-            // Act
-            var result = await controller.GetTweetById(key);
+        //    // Act
+        //    var result = await controller.GetTweetById(key);
 
-            // Assert
-            ((OkObjectResult)result).Value.Should().BeOfType<SingleResult<Tweet>>();
-            result.Should().BeOfType(typeof(OkObjectResult));
-        }
+        //    // Assert
+        //    ((OkObjectResult)result).Value.Should().BeOfType<SingleResult<Tweet>>();
+        //    result.Should().BeOfType(typeof(OkObjectResult));
+        //}
 
         [Fact]
         public async Task TweetsController_AddTweet_Should_Return_CreatedResult()

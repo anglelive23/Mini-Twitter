@@ -12,6 +12,14 @@ namespace Mini_Twitter.Application
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             #endregion
 
+            #region AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            #endregion
+
+            #region HttpContextAccessor
+            services.AddHttpContextAccessor();
+            #endregion
+
             return services;
         }
     }

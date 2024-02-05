@@ -20,10 +20,10 @@
         [OutputCache(PolicyName = "Tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllTweets()
+        public async Task<IActionResult> GetAllTweets(ODataQueryOptions<TweetDto> options)
         {
             var tweets = await _mediator
-                .Send(new GetTweetsListQuery());
+                    .Send(new GetTweetsListQuery() { Options = options });
             return Ok(tweets);
         }
 
@@ -31,15 +31,15 @@
         [OutputCache(PolicyName = "Tweet")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTweetById(int key)
+        public async Task<IActionResult> GetTweetById(int key, ODataQueryOptions<TweetDto> options)
         {
-            var address = await _mediator
+            var tweet = await _mediator
                 .Send(new GetTweetDetailsQuery
                 {
-                    Id = key
+                    Id = key,
+                    Options = options
                 });
-
-            return Ok(SingleResult.Create(address));
+            return Ok(SingleResult.Create(tweet));
         }
         #endregion
 

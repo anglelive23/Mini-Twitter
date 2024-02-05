@@ -6,7 +6,7 @@
         {
             var builder = new ODataConventionModelBuilder();
 
-            builder.EntitySet<Tweet>("Tweets");
+            builder.EntitySet<TweetDto>("Tweets");
             builder.EntitySet<ApplicationUser>("ApplicationUsers");
 
             builder.EnableLowerCamelCase();

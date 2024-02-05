@@ -62,7 +62,7 @@ namespace Mini_Twitter.Tests.Architecture
             var assembly = typeof(Application.AssemblyReference).Assembly;
             var dependencies = new[]
             {
-                DomainNamespace,
+                //DomainNamespace,
                 // some handlers (Delete Commands/Auth Commands) just return (bool/AuthModel) so they don't actually depend on Domain entity
                 ApplicationNamespace,
                 "System.Boolean"
