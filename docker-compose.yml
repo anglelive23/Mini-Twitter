@@ -1,24 +1,41 @@
 services:
   api:
     build: .
+    container_name: api
     ports:
-      - "8080:80"
+      - "8081:8080"
     networks:
-      - net1
+      - minitwitter
     depends_on:
-      - postgreSQLServer
+      - db
+      - cache
     environment:
-      - ConnectionStrings:DefaultConnection=Server=dbserver;Port=5432;Database=MiniTwitter;User Id=postgres;Password=1498AA!
+      - ConnectionStrings:DefaultConnection=Server=db;Port=5432;Database=MiniTwitter;User Id=postgres;Password=1498AA!
 
-  postgreSQLServer:
+  db:
     image: postgres:latest
+    container_name: postgres
     networks:
-      - net1
-    hostname: dbserver
+      - minitwitter
+    hostname: db
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=1498AA!
     ports:
       - "5432:5432"
 
+  cache:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    networks:
+      - minitwitter
+    ports:
+      - '6379:6379'
+
 networks:
-  net1:
+  minitwitter:
+
+volumes:
+  postgresdata:

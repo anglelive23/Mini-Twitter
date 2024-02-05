@@ -1,6 +1,7 @@
 # Build Stage
-FROM mcr.microsoft.com/dotnet/sdk:7.0 as build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 WORKDIR /src
+EXPOSE 8081
 COPY *.sln .
 COPY ["/Mini-Twitter.API/*.csproj", "./Mini-Twitter.API/"]
 COPY ["/Mini-Twitter.Application/*.csproj", "./Mini-Twitter.Application/"]
@@ -13,7 +14,7 @@ RUN dotnet build -c release -o output
 
 
 # Publish Stage
-From mcr.microsoft.com/dotnet/aspnet:7.0 as publish
+From mcr.microsoft.com/dotnet/aspnet:8.0 as publish
 WORKDIR /app
 COPY --from=build /src/output .
 ENTRYPOINT ["dotnet", "Mini-Twitter.API.dll"]
