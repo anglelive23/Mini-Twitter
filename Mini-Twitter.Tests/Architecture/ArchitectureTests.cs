@@ -85,8 +85,6 @@ namespace Mini_Twitter.Tests.Architecture
 
             // Act
             var result = Types.InAssembly(assembly)
-                .That()
-                .DoNotHaveNameEndingWith("Controller")
                 .ShouldNot()
                 .HaveDependencyOn(DomainNamespace)
                 .GetResult();
