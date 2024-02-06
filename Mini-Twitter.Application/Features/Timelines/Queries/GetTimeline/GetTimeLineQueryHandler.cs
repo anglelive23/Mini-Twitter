@@ -1,6 +1,6 @@
 ﻿namespace Mini_Twitter.Application.Features.Timelines.Queries.GetTimeline
 {
-    public class GetTimeLineQueryHandler : IRequestHandler<GetTimeLineQuery, List<Tweet>?>
+    public class GetTimeLineQueryHandler : IRequestHandler<GetTimeLineQuery, List<TweetDto>?>
     {
         #region Fields and Properties
         private readonly ITimelineRepository _repo;
@@ -14,13 +14,13 @@
         #endregion
 
         #region Interface Implementation
-        public async Task<List<Tweet>?> Handle(GetTimeLineQuery request, CancellationToken cancellationToken)
+        public async Task<List<TweetDto>?> Handle(GetTimeLineQuery request, CancellationToken cancellationToken)
         {
             var validator = new GetTimeLineQueryValidator();
             await validator.ValidateAndThrowAsync(request, cancellationToken);
             var timeline = _repo
                 .GetTimeLineForAUser(request.UserId, request.PageNumber, request.PageSize);
-            return timeline;
+            return timeline.Adapt<List<TweetDto>>();
         }
         #endregion
     }

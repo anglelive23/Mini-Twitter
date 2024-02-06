@@ -19,12 +19,13 @@
         [HttpGet("applicationusers({key:guid})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetUserById(string key)
+        public async Task<IActionResult> GetUserById(string key, ODataQueryOptions<ApplicationUserDto> options)
         {
             var user = await _mediator
                 .Send(new GetUserQuery
                 {
-                    UserId = key
+                    UserId = key,
+                    QueryOptions = options
                 });
             return Ok(SingleResult.Create(user));
         }
@@ -32,12 +33,13 @@
         [HttpGet("applicationusers({key:guid})/tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTweetsForUser(string key)
+        public async Task<IActionResult> GetTweetsForUser(string key, ODataQueryOptions<TweetDto> options)
         {
             var tweets = await _mediator
                 .Send(new GetUserTweetsListQuery
                 {
-                    UserId = key
+                    UserId = key,
+                    QueryOptions = options
                 });
             return Ok(tweets);
         }
@@ -45,13 +47,14 @@
         [HttpGet("applicationusers({key:guid})/tweets({tweetKey})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTweetByIdForUser(string key, int tweetKey)
+        public async Task<IActionResult> GetTweetByIdForUser(string key, int tweetKey, ODataQueryOptions<TweetDto> options)
         {
             var tweet = await _mediator
                 .Send(new GetUserTweetDetailsQuery
                 {
                     UserId = key,
-                    TweetId = tweetKey
+                    TweetId = tweetKey,
+                    QueryOptions = options
                 });
             return Ok(SingleResult.Create(tweet));
         }
@@ -59,12 +62,13 @@
         [HttpGet("applicationusers({key:guid})/retweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetRetweetsForUser(string key)
+        public async Task<IActionResult> GetRetweetsForUser(string key, ODataQueryOptions<RetweetDto> options)
         {
             var retweets = await _mediator
                 .Send(new GetUserRetweetsListQuery
                 {
-                    UserId = key
+                    UserId = key,
+                    QueryOptions = options
                 });
             return Ok(retweets);
         }
@@ -72,13 +76,14 @@
         [HttpGet("applicationusers({key:guid})/retweets({retweetKey})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetRetweetByIdForUser(string key, int retweetKey)
+        public async Task<IActionResult> GetRetweetByIdForUser(string key, int retweetKey, ODataQueryOptions<RetweetDto> options)
         {
             var retweet = await _mediator
                 .Send(new GetUserRetweetDetailsQuery
                 {
                     UserId = key,
-                    RetweetId = retweetKey
+                    RetweetId = retweetKey,
+                    QueryOptions = options
                 });
             return Ok(SingleResult.Create(retweet));
         }

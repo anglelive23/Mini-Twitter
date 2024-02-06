@@ -17,7 +17,6 @@
 
         #region GET
         [HttpGet("tweets")]
-        [OutputCache(PolicyName = "Tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllTweets(ODataQueryOptions<TweetDto> options)
@@ -28,7 +27,6 @@
         }
 
         [HttpGet("tweets({key})")]
-        [OutputCache(PolicyName = "Tweet")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetTweetById(int key, ODataQueryOptions<TweetDto> options)
@@ -46,7 +44,7 @@
         #region Post
         [HttpPost("tweets")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddTweet([FromBody] CreateTweetDto tweetDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddTweet([FromBody] CreateTweetDto tweetDto)
         {
             var tweet = await _mediator
                 .Send(new CreateTweetCommand
@@ -54,13 +52,15 @@
                     TweetDto = tweetDto
                 });
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
+            if (tweet is null)
+                return BadRequest("Tweet not created!");
+
             return Created(tweet);
         }
 
         [HttpPost("tweets({key})/replies")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto)
         {
             var reply = await _mediator
                 .Send(new CreateTweetReplyCommand
@@ -72,8 +72,6 @@
             if (reply is null)
                 return BadRequest($"Tweet with id: {key} does not exist on the server!");
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
-
             return Created(reply);
         }
         #endregion
@@ -81,7 +79,7 @@
         #region PUT
         [HttpPut("tweets({key})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> UpdateTweet(int key, [FromBody] UpdateTweetDto updateTweetDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateTweet(int key, [FromBody] UpdateTweetDto updateTweetDto)
         {
             var currentTweet = await _mediator
                 .Send(new UpdateTweetCommand
@@ -93,14 +91,12 @@
             if (currentTweet == null)
                 return NotFound("Tweet not found!");
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
-
             return NoContent();
         }
 
         [HttpPut("tweets({key})/replies({replyId})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> UpdateReplyForTweet(int key, int replyId, [FromBody] UpdateTweetReplyDto replyDto, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateReplyForTweet(int key, int replyId, [FromBody] UpdateTweetReplyDto replyDto)
         {
             var currentReply = await _mediator
                 .Send(new UpdateTweetReplyCommand
@@ -113,36 +109,34 @@
             if (currentReply == null)
                 return NotFound("Tweet or Reply not found!");
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
-
             return NoContent();
         }
         #endregion
 
         #region PATCH
-        [HttpPatch("tweets({key})")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> PartUpdateTweet(int key, Delta<Domain.Entities.Tweet> delta, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
-        {
-            var currentTweet = await _mediator
-                .Send(new PatchTweetCommand
-                {
-                    Id = key,
-                    Delta = delta,
-                });
+        // Todo: Fix Delta<Tweet> bug, somehow it broke.
+        //[HttpPatch("tweets({key})")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //public async Task<IActionResult> PartUpdateTweet(int key, Delta<Tweet> delta)
+        //{
+        //    var currentTweet = await _mediator
+        //        .Send(new PatchTweetCommand
+        //        {
+        //            Id = key,
+        //            Delta = delta.Adapt<Delta<Tweet>>(),
+        //        });
 
-            if (currentTweet is null)
-                return NotFound("Tweet not found!");
+        //    if (currentTweet is null)
+        //        return NotFound("Tweet not found!");
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
         #endregion
 
         #region DELETE
         [HttpDelete("tweets({key})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> RemoveTweet(int key, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveTweet(int key)
         {
             var currentTweet = await _mediator
                 .Send(new DeleteTweetCommand
@@ -153,13 +147,12 @@
             if (currentTweet is false)
                 return NotFound("Tweet not found!");
 
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
             return NoContent();
         }
 
         [HttpDelete("tweets({key})/replies({replyId})")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> RemoveReplyForTweet(int key, int replyId, [FromServices] IOutputCacheStore cache, CancellationToken cancellationToken)
+        public async Task<IActionResult> RemoveReplyForTweet(int key, int replyId)
         {
             var currentReply = await _mediator
                 .Send(new DeleteTweetReplyCommand
@@ -170,8 +163,6 @@
 
             if (currentReply is false)
                 return NotFound("Tweet or Reply not found!");
-
-            await cache.EvictByTagAsync("Tweets", cancellationToken);
 
             return NoContent();
         }

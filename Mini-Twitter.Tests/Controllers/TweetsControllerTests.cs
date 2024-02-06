@@ -77,22 +77,20 @@ namespace Mini_Twitter.Tests.Controllers
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(m => m.Send(It.Is<CreateTweetCommand>(cmd => cmd.TweetDto == tweetDto),
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Tweet
+                .ReturnsAsync(new TweetDto
                 {
                     Context = tweetDto.Context,
                     UserId = tweetDto.UserId
                 });
 
-            var cacheMock = new Mock<IOutputCacheStore>();
             var controller = new TweetsController(mediatorMock.Object);
 
             // Act
-            var result = await controller.AddTweet(tweetDto, cacheMock.Object, CancellationToken.None);
-            cacheMock.Verify(c => c.EvictByTagAsync("Tweets", It.IsAny<CancellationToken>()), Times.Once);
+            var result = await controller.AddTweet(tweetDto);
 
             // Assert
-            result.Should().BeOfType<CreatedODataResult<Tweet>>();
-            ((CreatedODataResult<Tweet>)result).Value.Should().BeEquivalentTo(tweetDto);
+            result.Should().BeOfType<CreatedODataResult<TweetDto>>();
+            ((CreatedODataResult<TweetDto>)result).Value.Should().BeEquivalentTo(tweetDto);
         }
 
         [Theory]
@@ -111,18 +109,16 @@ namespace Mini_Twitter.Tests.Controllers
                 .Setup(m => m.Send(
                 It.Is<CreateTweetReplyCommand>(cmd => cmd.Id == tweetKey && cmd.ReplyDto == replyDto),
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Reply());
+                .ReturnsAsync(new ReplyDto());
 
             var controller = new TweetsController(mediatorMock.Object);
-            var cacheMock = new Mock<IOutputCacheStore>();
 
             // Act
-            var result = await controller.AddReplyForTweet(tweetKey, replyDto, cacheMock.Object, CancellationToken.None);
-            cacheMock.Verify(c => c.EvictByTagAsync("Tweets", It.IsAny<CancellationToken>()), Times.Once());
+            var result = await controller.AddReplyForTweet(tweetKey, replyDto);
 
             // Assert
-            result.Should().BeOfType<CreatedODataResult<Reply>>();
-            ((CreatedODataResult<Reply>)result).Value.Should().BeOfType(typeof(Reply));
+            result.Should().BeOfType<CreatedODataResult<ReplyDto>>();
+            ((CreatedODataResult<ReplyDto>)result).Value.Should().BeOfType(typeof(ReplyDto));
         }
 
         [Theory]
@@ -136,16 +132,14 @@ namespace Mini_Twitter.Tests.Controllers
             };
 
             var mediatorMock = new Mock<IMediator>();
-            var cacheMock = new Mock<IOutputCacheStore>();
 
             mediatorMock.Setup(m => m.Send(It.Is<UpdateTweetCommand>(cmd => cmd.UpdateTweetDto == updatedTweetDto & cmd.Id == tweetKey), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Tweet());
+                .ReturnsAsync(new TweetDto());
 
             var controller = new TweetsController(mediatorMock.Object);
 
             // Act
-            var result = await controller.UpdateTweet(tweetKey, updatedTweetDto, cacheMock.Object, CancellationToken.None);
-            cacheMock.Verify(c => c.EvictByTagAsync("Tweets", It.IsAny<CancellationToken>()), Times.Once());
+            var result = await controller.UpdateTweet(tweetKey, updatedTweetDto);
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
@@ -170,18 +164,16 @@ namespace Mini_Twitter.Tests.Controllers
             };
 
             var mediatorMock = new Mock<IMediator>();
-            var cacheMock = new Mock<IOutputCacheStore>();
 
             mediatorMock
                 .Setup(m => m.Send(It.Is<UpdateTweetReplyCommand>(cmd => cmd.TweetId == command.TweetId && cmd.ReplyId == command.ReplyId && cmd.UpdateTweetReplyDto == command.UpdateTweetReplyDto),
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Reply());
+                .ReturnsAsync(new ReplyDto());
 
             var controller = new TweetsController(mediatorMock.Object);
 
             // Act
-            var result = await controller.UpdateReplyForTweet(tweetKey, replyKey, replyDto, cacheMock.Object, CancellationToken.None);
-            cacheMock.Verify(c => c.EvictByTagAsync("Tweets", It.IsAny<CancellationToken>()), Times.Once());
+            var result = await controller.UpdateReplyForTweet(tweetKey, replyKey, replyDto);
 
             // Assert
             result.Should().BeOfType<NoContentResult>();

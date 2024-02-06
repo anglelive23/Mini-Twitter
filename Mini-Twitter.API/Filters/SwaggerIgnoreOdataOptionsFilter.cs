@@ -6,13 +6,18 @@ namespace Mini_Twitter.API.Filters
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            var optionsParameteres = context.ApiDescription
+            var parameteresList = context.ApiDescription
                 .ParameterDescriptions
-                .FirstOrDefault(p => p.Type == typeof(ODataQueryOptions<TweetDto>));
+                .Where(p => p.Type == typeof(ODataQueryOptions<TweetDto>)
+                        || p.Type == typeof(ODataQueryOptions<ApplicationUserDto>)
+                        || p.Type == typeof(ODataQueryOptions<RetweetDto>));
 
-            if (optionsParameteres is not null)
-                operation.Parameters
-                    .Remove(operation.Parameters.FirstOrDefault(p => p.Name == optionsParameteres.Name));
+            foreach (var parameter in parameteresList)
+            {
+                if (parameteresList is not null)
+                    operation.Parameters
+                        .Remove(operation.Parameters.FirstOrDefault(p => p.Name == parameter.Name));
+            }
         }
     }
 }

@@ -31,7 +31,11 @@ namespace Mini_Twitter.Application.Features.Tweets.Queries.GetTweetDetails
             var validator = new GetTweetDetailsQueryValidator();
             await validator.ValidateAndThrowAsync(request, cancellationToken);
 
-            var key = $"tweet-{request.Id}-{_contextAccessor.HttpContext.Request.QueryString}";
+            var queryString = _contextAccessor.HttpContext!.Request.QueryString.ToString();
+            var key = string.IsNullOrEmpty(queryString)
+                ? Constants.TweetKey
+                : $"{Constants.TweetKey}-{queryString}";
+
             var tweetDto = await _cache
                 .GetOrSetAsync(key, async token =>
                 {

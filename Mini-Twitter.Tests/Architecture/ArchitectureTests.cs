@@ -56,31 +56,6 @@ namespace Mini_Twitter.Tests.Architecture
         }
 
         [Fact]
-        public void Application_Handlers_Should_ReturnDomainEntity()
-        {
-            // Arrange
-            var assembly = typeof(Application.AssemblyReference).Assembly;
-            var dependencies = new[]
-            {
-                //DomainNamespace,
-                // some handlers (Delete Commands/Auth Commands) just return (bool/AuthModel) so they don't actually depend on Domain entity
-                ApplicationNamespace,
-                "System.Boolean"
-            };
-
-            // Act
-            var result = Types.InAssembly(assembly)
-                .That()
-                .HaveNameEndingWith("Handler")
-                .Should()
-                .HaveDependencyOnAny(dependencies)
-                .GetResult();
-
-            // Assert
-            result.IsSuccessful.Should().BeTrue();
-        }
-
-        [Fact]
         public void Infrastructure_Should_Not_HaveDependancyOnAPIAndDomain()
         {
             // Arrange

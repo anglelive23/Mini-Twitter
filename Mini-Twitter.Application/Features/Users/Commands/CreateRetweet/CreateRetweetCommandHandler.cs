@@ -1,6 +1,6 @@
 ﻿namespace Mini_Twitter.Application.Features.Users.Commands.CreateRetweet
 {
-    public class CreateRetweetCommandHandler : IRequestHandler<CreateRetweetCommand, Retweet?>
+    public class CreateRetweetCommandHandler : IRequestHandler<CreateRetweetCommand, RetweetDto?>
     {
         #region Fields and Properties
         private readonly IUserRepository _repo;
@@ -14,14 +14,14 @@
         #endregion
 
         #region Interface Implementation
-        public async Task<Retweet?> Handle(CreateRetweetCommand request, CancellationToken cancellationToken)
+        public async Task<RetweetDto?> Handle(CreateRetweetCommand request, CancellationToken cancellationToken)
         {
             var validator = new CreateRetweetCommandValidator();
             await validator.ValidateAndThrowAsync(request, cancellationToken);
 
             var checkAdd = await _repo
                 .AddRetweetForUserAsync(request.UserId, request.RetweetDto.TweetId);
-            return checkAdd;
+            return checkAdd.Adapt<RetweetDto>();
         }
         #endregion
     }

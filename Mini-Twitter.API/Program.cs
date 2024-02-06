@@ -65,6 +65,6 @@ app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.MapControllers();
 app.MapCarter();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
-app.UseOutputCache();
+//app.UseOutputCache();
 
 app.Run();
