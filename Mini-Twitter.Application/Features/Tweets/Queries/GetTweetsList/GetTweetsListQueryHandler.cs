@@ -28,7 +28,11 @@ namespace Mini_Twitter.Application.Features.Tweets.Queries.GetTweetsList
         #region Interface Implementation
         public async Task<IQueryable<TweetDto>> Handle(GetTweetsListQuery request, CancellationToken cancellationToken)
         {
-            var key = $"tweets-{_contextAccessor.HttpContext.Request.QueryString}";
+            var queryString = _contextAccessor.HttpContext!.Request.QueryString.ToString();
+            var key = string.IsNullOrEmpty(queryString)
+                ? Constants.TweetsKey
+                : $"{Constants.TweetsKey}-{queryString}";
+
             var tweetsDto = await _cache.GetOrSetAsync(key, async token =>
             {
                 var tweets = await _repo

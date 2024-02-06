@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Mini_Twitter.Application.Extensions
 {
-    public static class DistrubutedCacheExtensions
+    public static class DistributedCacheExtensions
     {
         public static async Task<IQueryable<T>> GetOrSetAsync<T>(
             this IDistributedCache cache,

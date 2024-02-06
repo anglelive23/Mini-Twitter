@@ -10,11 +10,11 @@
             #endregion
 
             #region Cache
-            builder.Services.AddOutputCache(options =>
-            {
-                options.AddPolicy("Tweets", policy => policy.Tag("Tweets").Expire(TimeSpan.FromHours(1)));
-                options.AddPolicy("Tweet", policy => policy.Tag("Tweets").SetVaryByQuery("key").Expire(TimeSpan.FromHours(1)));
-            });
+            //builder.Services.AddOutputCache(options =>
+            //{
+            //    options.AddPolicy("Tweets", policy => policy.Tag("Tweets").Expire(TimeSpan.FromHours(1)));
+            //    options.AddPolicy("Tweet", policy => policy.Tag("Tweets").SetVaryByQuery("key").Expire(TimeSpan.FromHours(1)));
+            //});
             #endregion
 
             #region Serilog

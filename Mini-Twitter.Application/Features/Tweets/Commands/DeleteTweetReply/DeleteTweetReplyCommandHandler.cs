@@ -1,6 +1,4 @@
-﻿using Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweet;
-
-namespace Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweetReply
+﻿namespace Mini_Twitter.Application.Features.Tweets.Commands.DeleteTweetReply
 {
     public class DeleteTweetReplyCommandHandler : IRequestHandler<DeleteTweetReplyCommand, bool>
     {

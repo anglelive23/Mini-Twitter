@@ -1,8 +1,9 @@
 ﻿namespace Mini_Twitter.Application.Features.Users.Queries.GetUserRetweetDetails
 {
-    public class GetUserRetweetDetailsQuery : IRequest<IQueryable<Retweet>>
+    public class GetUserRetweetDetailsQuery : IRequest<IQueryable<RetweetDto>>
     {
-        public string UserId { get; set; }
-        public int RetweetId { get; set; }
+        public required string UserId { get; set; }
+        public required int RetweetId { get; set; }
+        public required ODataQueryOptions<RetweetDto> QueryOptions { get; set; }
     }
 }

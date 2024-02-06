@@ -10,3 +10,8 @@ global using Mini_Twitter.Application.Models.Dtos;
 global using Microsoft.OData.Edm;
 global using Microsoft.OData.ModelBuilder;
 global using Microsoft.AspNetCore.OData.Deltas;
+global using AutoMapper;
+global using AutoMapper.AspNet.OData;
+global using Microsoft.AspNetCore.OData.Query;
+global using Microsoft.Extensions.Caching.Distributed;
+global using Mini_Twitter.Application.Features.Tweets.Notifications;

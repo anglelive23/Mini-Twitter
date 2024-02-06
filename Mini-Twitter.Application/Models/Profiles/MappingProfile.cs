@@ -13,6 +13,12 @@ namespace Mini_Twitter.Application.Models.Profiles
         {
             CreateMap<Tweet, TweetDto>()
                 .ForAllMembers(o => o.ExplicitExpansion());
+            CreateMap<Reply, ReplyDto>()
+                .ForAllMembers(o => o.ExplicitExpansion());
+            CreateMap<Retweet, RetweetDto>()
+                .ForAllMembers(o => o.ExplicitExpansion());
+            CreateMap<ApplicationUser, ApplicationUserDto>()
+                .ForAllMembers(o => o.ExplicitExpansion());
         }
     }
 }

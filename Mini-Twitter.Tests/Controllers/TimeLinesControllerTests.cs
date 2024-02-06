@@ -7,6 +7,7 @@ using Mini_Twitter.Application.Features.Timelines.Queries.GetTimeline;
 using Mini_Twitter.API.Controllers;
 using Mini_Twitter.Domain.Entities;
 using Moq;
+using Mini_Twitter.Application.Models.Dtos;
 
 namespace Mini_Twitter.Tests.Controllers
 {
@@ -21,9 +22,9 @@ namespace Mini_Twitter.Tests.Controllers
             var pageSize = 10;
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetTimeLineQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<Tweet>());
+                .ReturnsAsync(new List<TweetDto>());
             var controller = new TimeLinesController(mediatorMock.Object);
-            var expectedTweets = new Mock<List<Tweet>>();
+            var expectedTweets = new Mock<List<TweetDto>>();
 
             // Act
             var result = await controller.GetTimeLineForAUser(userId, pageNumber, pageSize);
@@ -43,7 +44,7 @@ namespace Mini_Twitter.Tests.Controllers
             var pageSize = 10;
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetTimeLineQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((List<Tweet>)null);
+                .ReturnsAsync((List<TweetDto>)null);
             var controller = new TimeLinesController(mediatorMock.Object);
 
             // Act
