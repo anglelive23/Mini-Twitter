@@ -37,7 +37,7 @@ namespace Mini_Twitter.Application.Features.Tweets.Queries.GetTweetDetails
                 : $"{Constants.TweetKey}-{queryString}";
 
             var tweetDto = await _cache
-                .GetOrSetAsync(key, async token =>
+                .GetOrSetAsync(key, async () =>
                 {
                     var tweet = await _repo
                         .GetAll(r => r.Id == request.Id && r.IsDeleted == false)

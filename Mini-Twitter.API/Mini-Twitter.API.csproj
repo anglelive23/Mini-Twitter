@@ -6,6 +6,7 @@
     <RootNamespace>Mini_Twitter.API</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper.AspNetCore.OData.EFCore" Version="4.0.2" />
     <PackageReference Include="Carter" Version="8.0.0" />
     <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.4" />

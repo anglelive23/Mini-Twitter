@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.AspNet.OData;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.AspNetCore.Http;
 using Mini_Twitter.Application.Extensions;
 
 namespace Mini_Twitter.Application.Features.Tweets.Queries.GetTweetsList
@@ -33,7 +30,7 @@ namespace Mini_Twitter.Application.Features.Tweets.Queries.GetTweetsList
                 ? Constants.TweetsKey
                 : $"{Constants.TweetsKey}-{queryString}";
 
-            var tweetsDto = await _cache.GetOrSetAsync(key, async token =>
+            var tweetsDto = await _cache.GetOrSetAsync(key, async () =>
             {
                 var tweets = await _repo
                 .GetAll(t => t.IsDeleted == false)
