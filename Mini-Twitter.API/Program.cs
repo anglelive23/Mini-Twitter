@@ -7,7 +7,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<LogActivityFilter>();
 }).AddOData(options =>
 {
-    options.AddRouteComponents("api/odata", new TwitterEntityDataModel().GetEntityDataModel()).Select().Filter().OrderBy().Expand().SetMaxTop(1000);
+    options.AddRouteComponents("api/odata", new TwitterEntityDataModel().GetEntityDataModel()).Select().Filter().OrderBy().Expand().SetMaxTop(1000).Count();
 });
 
 builder.Services.AddEndpointsApiExplorer();
