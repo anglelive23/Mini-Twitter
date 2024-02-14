@@ -4,6 +4,7 @@ namespace Mini_Twitter.Application.Extensions
 {
     public static class DistributedCacheExtensions
     {
+        [Obsolete("Use GetAsync from ICacheService instead!")]
         public static async Task<IQueryable<T>> GetOrSetAsync<T>(
             this IDistributedCache cache,
             string key,

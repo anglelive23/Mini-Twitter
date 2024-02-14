@@ -7,13 +7,13 @@
 
     {
         #region Fields and Properties
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cacheService;
         #endregion
 
         #region Constructors
-        public CacheInvalidationTweetHandler(IDistributedCache cache)
+        public CacheInvalidationTweetHandler(ICacheService cacheService)
         {
-            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _cacheService = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
         }
         #endregion
 
@@ -35,9 +35,11 @@
         #endregion
 
         #region Helper Methods
-        private async Task HandleInternal(string key)
+        private async Task HandleInternal(string prefix)
         {
-            await _cache.RemoveAsync(key);
+            // Dynamic way to remove all sets of cached keys for the same prefix
+            // fits well with odata operations
+            await _cacheService.RemoveByPrefixAsync(prefix);
         }
         #endregion
     }

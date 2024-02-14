@@ -37,7 +37,11 @@
                     Id = key,
                     Options = options
                 });
-            return Ok(SingleResult.Create(tweet));
+
+            if (tweet is null)
+                return NotFound($"Tweet with Id: {key} was not found!");
+
+            return Ok(tweet);
         }
         #endregion
 

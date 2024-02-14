@@ -15,3 +15,4 @@ global using AutoMapper.AspNet.OData;
 global using Microsoft.AspNetCore.OData.Query;
 global using Microsoft.Extensions.Caching.Distributed;
 global using Mini_Twitter.Application.Features.Tweets.Notifications;
+global using Mini_Twitter.Application.Extensions;

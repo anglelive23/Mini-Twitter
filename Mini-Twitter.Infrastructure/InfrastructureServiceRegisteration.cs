@@ -43,6 +43,7 @@
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITimelineRepository, TimelineRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<ICacheService, CacheService>();
             #endregion
 
             return services;
