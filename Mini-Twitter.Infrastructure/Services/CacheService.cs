@@ -102,7 +102,14 @@ namespace Mini_Twitter.Infrastructure.Services
                             : $"{Constants.TweetKey}{query}";
                     }
                     break;
-
+                case Type userType when userType == typeof(ApplicationUserDto):
+                    {
+                        var key = _contextAccessor.HttpContext.Request.RouteValues["key"];
+                        cacheKey = string.IsNullOrEmpty(query)
+                            ? $"{Constants.UserKey}-{key}"
+                            : $"{Constants.UserKey}-{key}-{query}";
+                    }
+                    break;
                 default:
                     cacheKey = string.Empty;
                     break;
