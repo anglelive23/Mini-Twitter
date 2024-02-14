@@ -4,5 +4,6 @@
     {
         public const string TweetsKey = "tweets";
         public const string TweetKey = "tweet-";
+        public const string UserKey = "user";
     }
 }

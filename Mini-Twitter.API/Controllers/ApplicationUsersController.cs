@@ -27,7 +27,10 @@
                     UserId = key,
                     QueryOptions = options
                 });
-            return Ok(SingleResult.Create(user));
+
+            if (user is null)
+                return NotFound($"User with Id: {key} was not found!");
+            return Ok(user);
         }
 
         [HttpGet("applicationusers({key:guid})/tweets")]
