@@ -217,6 +217,8 @@ namespace Mini_Twitter.Infrastructure.Services
                 roleClaims.Add(new Claim("roles", role));
             }
 
+            roleClaims.AddRange(roles.Select(r => new Claim("roles", r)));
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),

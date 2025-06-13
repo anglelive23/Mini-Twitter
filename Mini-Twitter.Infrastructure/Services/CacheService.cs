@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Mini_Twitter.Application.Models.Dtos;
+using StackExchange.Redis;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
@@ -12,13 +13,15 @@ namespace Mini_Twitter.Infrastructure.Services
         private readonly IDistributedCache _cache;
         private readonly IHttpContextAccessor _contextAccessor;
         private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
+        private readonly IConfiguration _configuration;
         #endregion
 
         #region Constructors
-        public CacheService(IDistributedCache cache, IHttpContextAccessor contextAccessor)
+        public CacheService(IDistributedCache cache, IHttpContextAccessor contextAccessor, IConfiguration configuration)
         {
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
         #endregion
 
@@ -29,20 +32,28 @@ namespace Mini_Twitter.Infrastructure.Services
             DistributedCacheEntryOptions options,
             CancellationToken cancellationToken = default) where T : class
         {
-            // To-do: replace static key with dynamic one coming during runtime -> done
-            // To-do: make it work in a way if key is privided while calling method it will be used -> done
-            // if not just generate one at runtime
-            var cacheKey = key ?? GenerateCacheKey(typeof(T));
+            // If cache connection is not established, fallback to the function and return the data
+            // could use ConnectionMultiplexer to check if the connection is established, but for simplicity we will just wrap inside try-catch
+            // since GetStringAsync will return timed out
+            try
+            {
+                // If key is null, generate it based on the type of T
+                var cacheKey = key ?? GenerateCacheKey(typeof(T));
+                var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
+                if (!string.IsNullOrEmpty(cachedData))
+                    return JsonSerializer.Deserialize<T>(cachedData)!;
 
-            var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
-            if (!string.IsNullOrEmpty(cachedData))
-                return JsonSerializer.Deserialize<T>(cachedData)!;
-
-            var callbackData = await fallbackFunction();
-            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
-            // Add the cachekey to the dict to handle delete events later on
-            CacheKeys.TryAdd(cacheKey, true);
-            return callbackData;
+                var callbackData = await fallbackFunction();
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
+                // Add the cachekey to the dict to handle delete events later on
+                CacheKeys.TryAdd(cacheKey, true);
+                return callbackData;
+            }
+            catch (RedisConnectionException)
+            {
+                var data = await fallbackFunction();
+                return data;
+            }
         }
 
         /// <summary>
