@@ -3,17 +3,10 @@
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UsersFollowsController : ControllerBase
+    public class UsersFollowsController : BaseControllerModel
     {
-        #region Fields and Properties
-        private readonly IMediator _mediator;
-        #endregion
-
         #region Constructors
-        public UsersFollowsController(IMediator mediator)
-        {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
+        public UsersFollowsController(IMediator mediator) : base(mediator) { }
         #endregion
 
         #region Follow & Unfollow

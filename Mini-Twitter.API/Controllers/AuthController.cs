@@ -2,17 +2,10 @@
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : AuthBaseModel
+    public class AuthController : BaseControllerModel
     {
-        #region Fields and Properties
-        private readonly IMediator _mediator;
-        #endregion
-
         #region Constructors
-        public AuthController(IMediator mediator)
-        {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
+        public AuthController(IMediator mediator) : base(mediator) { }
         #endregion
 
         #region Authentication Endpoints

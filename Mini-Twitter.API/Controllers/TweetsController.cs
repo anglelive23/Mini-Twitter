@@ -2,17 +2,10 @@
 {
     [Route("api/odata")]
     [Authorize]
-    public class TweetsController : ODataController
+    public class TweetsController : BaseControllerModel
     {
-        #region Fields and Properties
-        private readonly IMediator _mediator;
-        #endregion
-
         #region Constructors
-        public TweetsController(IMediator mediator)
-        {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
+        public TweetsController(IMediator mediator) : base(mediator) { }
         #endregion
 
         #region GET
@@ -48,12 +41,14 @@
         #region Post
         [HttpPost("tweets")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddTweet([FromBody] CreateTweetDto tweetDto)
+        public async Task<IActionResult> AddTweet([FromBody] CreateTweetRequestDto tweetDto)
         {
+            var userId = GetUserId();
+
             var tweet = await _mediator
                 .Send(new CreateTweetCommand
                 {
-                    TweetDto = tweetDto
+                    TweetDto = new CreateTweetDto { Context = tweetDto.Context, UserId = userId }
                 });
 
             if (tweet is null)
@@ -64,13 +59,17 @@
 
         [HttpPost("tweets({key})/replies")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto)
+        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyRequestDto replyDto)
         {
             var reply = await _mediator
                 .Send(new CreateTweetReplyCommand
                 {
                     Id = key,
-                    ReplyDto = replyDto
+                    ReplyDto = new CreateReplyDto
+                    {
+                        Context = replyDto.Context,
+                        UserId = GetUserId()
+                    }
                 });
 
             if (reply is null)

@@ -2,23 +2,18 @@
 {
     [Route("api/[controller]")]
     [Authorize]
-    public class TimeLinesController : ControllerBase
+    public class TimeLinesController : BaseControllerModel
     {
-        #region Fields and Properties
-        private readonly IMediator _mediator;
-        #endregion
 
         #region Constructors
-        public TimeLinesController(IMediator mediator)
-        {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        }
+        public TimeLinesController(IMediator mediator) : base(mediator) { }
         #endregion
 
         #region GET
-        [HttpGet("{userId:guid}")]
-        public async Task<IActionResult> GetTimeLineForAUser(string userId, int pageNumber = 1, int pageSize = 1)
+        [HttpGet]
+        public async Task<IActionResult> GetTimeLineForAUser(int pageNumber = 1, int pageSize = 1)
         {
+            var userId = GetUserId();
             var timeline = await _mediator
                 .Send(new GetTimeLineQuery
                 {
