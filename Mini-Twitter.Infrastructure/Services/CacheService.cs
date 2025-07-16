@@ -46,16 +46,7 @@ namespace Mini_Twitter.Infrastructure.Services
                 {
                     // Ensures a single fallbackFunction call and single Redis write for all threads accessing the same key concurrently
                     var lazyTask = _inflight.GetOrAdd(cacheKey, _ => new Lazy<Task<object>>(async () =>
-                    {
-                        var data = await fallbackFunction();
-                        await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), options, cancellationToken);
-
-                        // Add the cache key to the dict to handle delete events later on
-                        CacheKeys.TryAdd(cacheKey, true);
-                        // Remove the lazy task from inflight cache
-                        _inflight.TryRemove(cacheKey, out var _);
-                        return data;
-                    }));
+                        await FetchAndCacheAsync<T>(cacheKey, fallbackFunction, options, cancellationToken, true)));
 
                     return (T)await lazyTask.Value;
                 }
@@ -69,11 +60,7 @@ namespace Mini_Twitter.Infrastructure.Services
                     if (!string.IsNullOrEmpty(cachedData))
                         return JsonSerializer.Deserialize<T>(cachedData)!;
 
-                    var callbackData = await fallbackFunction();
-                    await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
-                    // Add the cachekey to the dict to handle delete events later on
-                    CacheKeys.TryAdd(cacheKey, true);
-                    return callbackData;
+                    return await FetchAndCacheAsync<T>(cacheKey, fallbackFunction, options, cancellationToken);
                 }
                 finally
                 {
@@ -154,6 +141,26 @@ namespace Mini_Twitter.Infrastructure.Services
                     break;
             }
             return cacheKey;
+        }
+
+        private async Task<T> FetchAndCacheAsync<T>(
+            string cacheKey,
+            Func<Task<T>> fallbackFunction,
+            DistributedCacheEntryOptions options,
+            CancellationToken cancellationToken,
+            bool clearInflight = false) where T : class
+        {
+            var callbackData = await fallbackFunction();
+            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
+
+            // Add the cachekey to the dict to handle delete events later on
+            CacheKeys.TryAdd(cacheKey, true);
+
+            // Remove the lazy task from inflight cache
+            if (clearInflight)
+                _inflight.TryRemove(cacheKey, out _);
+
+            return callbackData;
         }
     }
 }
