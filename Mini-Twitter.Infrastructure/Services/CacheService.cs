@@ -9,23 +9,20 @@ namespace Mini_Twitter.Infrastructure.Services
 {
     public class CacheService : ICacheService
     {
-        #region Fields and Properties
         private readonly IDistributedCache _cache;
         private readonly IHttpContextAccessor _contextAccessor;
         private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> CacheLocks = new();
+        private readonly ConcurrentDictionary<string, Lazy<Task<object>>> _inflight = new();
         private readonly IConfiguration _configuration;
-        #endregion
 
-        #region Constructors
         public CacheService(IDistributedCache cache, IHttpContextAccessor contextAccessor, IConfiguration configuration)
         {
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-        #endregion
 
-        #region Interface Implementation
         public async Task<T> GetAsync<T>(
             string? key,
             Func<Task<T>> fallbackFunction,
@@ -37,22 +34,55 @@ namespace Mini_Twitter.Infrastructure.Services
             // since GetStringAsync will return timed out
             try
             {
+                var useLazyTask = _configuration.GetValue<bool>("Cache:UseLazyTask");
+
                 // If key is null, generate it based on the type of T
                 var cacheKey = key ?? GenerateCacheKey(typeof(T));
                 var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
                 if (!string.IsNullOrEmpty(cachedData))
                     return JsonSerializer.Deserialize<T>(cachedData)!;
 
-                var callbackData = await fallbackFunction();
-                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
-                // Add the cachekey to the dict to handle delete events later on
-                CacheKeys.TryAdd(cacheKey, true);
-                return callbackData;
+                if (useLazyTask)
+                {
+                    // Ensures a single fallbackFunction call and single Redis write for all threads accessing the same key concurrently
+                    var lazyTask = _inflight.GetOrAdd(cacheKey, _ => new Lazy<Task<object>>(async () =>
+                    {
+                        var data = await fallbackFunction();
+                        await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), options, cancellationToken);
+
+                        // Add the cache key to the dict to handle delete events later on
+                        CacheKeys.TryAdd(cacheKey, true);
+                        // Remove the lazy task from inflight cache
+                        _inflight.TryRemove(cacheKey, out var _);
+                        return data;
+                    }));
+
+                    return (T)await lazyTask.Value;
+                }
+
+                var keyLock = CacheLocks.GetOrAdd(cacheKey, _ => new SemaphoreSlim(1, 1));
+                await keyLock.WaitAsync(cancellationToken);
+                try
+                {
+                    // Ensures a single fallbackFunction call, but each thread performs up to two Redis reads (before and after acquiring the lock)
+                    cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
+                    if (!string.IsNullOrEmpty(cachedData))
+                        return JsonSerializer.Deserialize<T>(cachedData)!;
+
+                    var callbackData = await fallbackFunction();
+                    await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(callbackData), options, cancellationToken);
+                    // Add the cachekey to the dict to handle delete events later on
+                    CacheKeys.TryAdd(cacheKey, true);
+                    return callbackData;
+                }
+                finally
+                {
+                    keyLock.Release();
+                }
             }
             catch (RedisConnectionException)
             {
-                var data = await fallbackFunction();
-                return data;
+                return await fallbackFunction();
             }
         }
 
@@ -84,9 +114,7 @@ namespace Mini_Twitter.Infrastructure.Services
             await _cache.RemoveAsync(key, cancellationToken);
             CacheKeys.TryRemove(key, out bool _);
         }
-        #endregion
 
-        #region Helpers
         /// <summary>
         /// Generate cache key based on the type of the passed argument
         /// </summary>
@@ -127,6 +155,5 @@ namespace Mini_Twitter.Infrastructure.Services
             }
             return cacheKey;
         }
-        #endregion
     }
 }
