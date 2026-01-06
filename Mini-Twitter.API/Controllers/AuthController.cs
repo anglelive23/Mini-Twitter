@@ -1,4 +1,6 @@
-﻿namespace Mini_Twitter.API.Controllers
+﻿using Mini_Twitter.Application.Extensions;
+
+namespace Mini_Twitter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,10 +25,10 @@
                 UserName = model.UserName
             });
 
-            if (!result.IsAuthenticated)
-                return StatusCode(StatusCodes.Status400BadRequest, $"{result.Message}");
+            if (result.IsFailure)
+                return BadRequest(result);
 
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshTokenInCookie(result.Value.RefreshToken, result.Value.RefreshTokenExpiration);
 
             return Ok(result);
         }
@@ -42,13 +44,20 @@
                     Password = model.Password
                 });
 
-            if (!result.IsAuthenticated)
-                return StatusCode(StatusCodes.Status400BadRequest, $"{result.Message}");
+            if (result.IsFailure)
+                return BadRequest(result);
 
-            if (!string.IsNullOrEmpty(result.Token))
-                SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
-
+            SetRefreshTokenInCookie(result.Value.RefreshToken, result.Value.RefreshTokenExpiration);
             return Ok(result);
+
+            //return result.Match<AuthModel, IActionResult>(
+            //    authModel =>
+            //    {
+            //        SetRefreshTokenInCookie(authModel.RefreshToken, authModel.RefreshTokenExpiration);
+            //        return Ok(authModel);
+            //    },
+            //    error => BadRequest(error)
+            //);
         }
         #endregion
     }

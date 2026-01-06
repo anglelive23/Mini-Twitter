@@ -1,6 +1,8 @@
-﻿namespace Mini_Twitter.Application.Features.Authentications.Commands.Register
+﻿using Mini_Twitter.Application.Common;
+
+namespace Mini_Twitter.Application.Features.Authentications.Commands.Register
 {
-    public class RegisterCommand : IRequest<AuthModel?>
+    public class RegisterCommand : IRequest<Result<AuthModel>>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
