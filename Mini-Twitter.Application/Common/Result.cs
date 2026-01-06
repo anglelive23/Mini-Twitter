@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Mini_Twitter.Domain.Common
+namespace Mini_Twitter.Application.Common
 {
     public class Result
     {
@@ -32,10 +33,13 @@ namespace Mini_Twitter.Domain.Common
             _value = value;
         }
 
+        //[NotNull]
+        //public TValue? Value => IsSuccess
+        //    ? _value!
+        //    : throw new InvalidOperationException("The value of failure results cannot be accessed.");
+
         [NotNull]
-        public TValue? Value => IsSuccess
-            ? _value!
-            : throw new InvalidOperationException("The value of failure results cannot be accessed.");
+        public TValue? Value => IsSuccess ? _value! : default!;
 
         public static implicit operator Result<TValue>(TValue? value)
             => value != null ? Success(value) : Failure<TValue>(Error.Null);

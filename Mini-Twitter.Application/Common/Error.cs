@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mini_Twitter.Domain.Common
+namespace Mini_Twitter.Application.Common
 {
     public sealed class Error
     {
@@ -22,7 +23,11 @@ namespace Mini_Twitter.Domain.Common
         public static Error Unauthorized(string message) => new Error("Unauthorized", message);
         public static Error Conflict(string message) => new Error("Conflict", message);
         public static Error Unexpected(string message) => new Error("Unexpected", message);
+        public static Error BadRequest(string message) => new Error("BadRequest", message);
         public static Error None => new Error(string.Empty);
         public static Error Null => new Error("NullValue", "Value is Null.");
+
+        // Implicit conversion to Result
+        public static implicit operator Result(Error error) => Result.Failure(error);
     }
 }

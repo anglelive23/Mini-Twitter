@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Mini_Twitter.Application.Common;
 using Mini_Twitter.Application.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -24,13 +25,13 @@ namespace Mini_Twitter.Infrastructure.Services
         #endregion
 
         #region Interface Implementation
-        public async Task<AuthModel> RegisterAsync(RegisterModel model)
+        public async Task<Result<AuthModel>> RegisterAsync(RegisterModel model)
         {
             if (await _userManager.FindByEmailAsync(model.Email) is not null)
-                return new AuthModel { Message = "Email is already registered.", IsAuthenticated = false };
+                return Result.Failure<AuthModel>(Error.BadRequest("Email is already registered."));
 
             if (await _userManager.FindByNameAsync(model.UserName) is not null)
-                return new AuthModel { Message = "Username is already registered.", IsAuthenticated = false };
+                return Result.Failure<AuthModel>(Error.BadRequest("Username is already registered."));
 
             var user = new ApplicationUser
             {
@@ -50,7 +51,7 @@ namespace Mini_Twitter.Infrastructure.Services
                 foreach (var error in result.Errors)
                     errors.AppendLine($"{error.Description}, ");
                 errors = errors.Remove(errors.Length - 2, 2);
-                return new AuthModel { Message = errors.ToString(), IsAuthenticated = false };
+                return Result.Failure<AuthModel>(Error.Unexpected(errors.ToString()));
             }
             // Assign default role
             await _userManager.AddToRoleAsync(user, "User");
@@ -60,7 +61,7 @@ namespace Mini_Twitter.Infrastructure.Services
             var refreshToken = GenerateRefreshToken();
 
             // To-do fix refresh token not saving to database -> Fixed
-            user.RefreshTokens.Add(refreshToken);
+            user.RefreshTokens!.Add(refreshToken);
             await _userManager.UpdateAsync(user);
 
             // Returning the AuthModel containing the token created
@@ -78,28 +79,30 @@ namespace Mini_Twitter.Infrastructure.Services
             };
         }
 
-        public async Task<AuthModel> LoginAsync(LoginModel model)
+        public async Task<Result<AuthModel>> LoginAsync(LoginModel model)
         {
-            var user = await _userManager
-                .Users
-                .Include(u => u.RefreshTokens.Where(r => r.RevokedOn == null && DateTime.UtcNow <= r.ExpiresOn))
+            var now = DateTime.UtcNow;
+            var user = await _userManager.Users
+                .Include(u => u.RefreshTokens!
+                    .Where(r => r.RevokedOn == null && r.ExpiresOn >= now))
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
-                return new AuthModel { Message = "Email or password is incorrect!" };
 
-            var authModel = await GetTokenAsync(user);
+            if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
+                return Result.Failure<AuthModel>(Error.BadRequest("Email or password is incorrect!"));
+
+            var authModel = await GetTokenAsync(user!);
 
             return authModel;
         }
 
-        public async Task<AuthModel> RequestTokenAsync(TokenRequestModel model)
+        public async Task<Result<AuthModel>> RequestTokenAsync(TokenRequestModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
-                return new AuthModel { Message = "Email or password is incorrect!" };
+                return Result.Failure<AuthModel>(Error.BadRequest("Email or password is incorrect!"));
 
             var authModel = await GetTokenAsync(user);
 
