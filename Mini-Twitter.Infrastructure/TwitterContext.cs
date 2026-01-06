@@ -10,6 +10,8 @@
         public virtual DbSet<UserFollowers> UserFollowers { get; set; }
         //public DbSet<UserTweet> UserTweets { get; set; }
 
+        public DbSet<Module> Modules { get; set; }
+        public DbSet<RoleAccessModule> RoleAccessModules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +42,12 @@
 
             modelBuilder.Entity<RefreshToken>()
                 .ToTable("RefreshTokens", "security");
+
+            modelBuilder.Entity<Module>()
+                .ToTable("Modules", "security");
+
+            modelBuilder.Entity<RoleAccessModule>()
+                .ToTable("RoleAccessModules", "security");
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.Followers)

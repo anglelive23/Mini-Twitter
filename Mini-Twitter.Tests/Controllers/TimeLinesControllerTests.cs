@@ -49,7 +49,7 @@ namespace Mini_Twitter.Tests.Controllers
             var controller = new TimeLinesController(mediatorMock.Object);
 
             // Act
-            var result = await controller.GetTimeLineForAUser(userId, pageNumber, pageSize);
+            var result = await controller.GetTimeLineForAUser(pageNumber, pageSize);
 
             // Assert
             result.Should().BeOfType(typeof(NotFoundObjectResult));
