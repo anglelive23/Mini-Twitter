@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Mini_Twitter.Application.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Mini_Twitter.Infrastructure.Services
 {
@@ -13,13 +10,15 @@ namespace Mini_Twitter.Infrastructure.Services
         #region Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JWT _jwt;
+        private readonly TwitterContext _context;
         #endregion
 
         #region Constructors
-        public AuthService(UserManager<ApplicationUser> userManager, IOptions<JWT> jwt)
+        public AuthService(UserManager<ApplicationUser> userManager, IOptions<JWT> jwt, TwitterContext context)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _jwt = jwt.Value;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
         #endregion
 
@@ -214,15 +213,34 @@ namespace Mini_Twitter.Infrastructure.Services
 
             roleClaims.AddRange(roles.Select(r => new Claim("roles", r)));
 
+            // Getting permissions from RoleAccessModules and adding them as claims
+            var roleAccessModules = await _context.RoleAccessModules
+                .Include(ram => ram.Module)
+                .Where(ram => roles.Contains(ram.Role.Name!))
+                .ToListAsync();
+
+            var permissionClaims = roleAccessModules
+                .SelectMany(ram => new[]
+                {
+                    ram.CanRead ? $"{ram.Module.Name}.Read" : null,
+                    ram.CanWrite ? $"{ram.Module.Name}.Write" : null,
+                    ram.CanUpdate ? $"{ram.Module.Name}.Update" : null,
+                    ram.CanDelete ? $"{ram.Module.Name}.Delete" : null
+                })
+                .Where(p => p != null)
+                .Distinct()
+                .Select(p => new Claim("permission", p!));
+
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("uid", user.Id)
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim("uid", user.Id),
             }
             .Union(roleClaims)
-            .Union(userClaims);
+            .Union(userClaims)
+            .Union(permissionClaims);
 
             var symmerticSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
             var signingCredentials = new SigningCredentials(symmerticSecurityKey, SecurityAlgorithms.HmacSha256);

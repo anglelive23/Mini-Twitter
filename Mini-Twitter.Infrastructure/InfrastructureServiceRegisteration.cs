@@ -1,4 +1,8 @@
-﻿namespace Mini_Twitter.Infrastructure
+﻿using Microsoft.AspNetCore.Authorization;
+using Mini_Twitter.Infrastructure.Authorization.Handlers;
+using Mini_Twitter.Infrastructure.Authorization.Policy;
+
+namespace Mini_Twitter.Infrastructure
 {
     public static class InfrastructureServiceRegisteration
     {
@@ -44,6 +48,12 @@
             services.AddScoped<ITimelineRepository, TimelineRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<ICacheService, CacheService>();
+            services.AddScoped<IModuleRepository, ModuleRepository>();
+            #endregion
+
+            #region Authoriztion Handler
+            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            services.AddScoped<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             #endregion
 
             return services;

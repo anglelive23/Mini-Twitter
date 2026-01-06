@@ -27,7 +27,7 @@ namespace Mini_Twitter.Tests.Controllers
             var expectedTweets = new Mock<List<TweetDto>>();
 
             // Act
-            var result = await controller.GetTimeLineForAUser(userId, pageNumber, pageSize);
+            var result = await controller.GetTimeLineForAUser(pageNumber, pageSize);
 
             // Assert
             result.Should().NotBeOfType(typeof(NotFoundResult));
@@ -48,7 +48,7 @@ namespace Mini_Twitter.Tests.Controllers
             var controller = new TimeLinesController(mediatorMock.Object);
 
             // Act
-            var result = await controller.GetTimeLineForAUser(userId, pageNumber, pageSize);
+            var result = await controller.GetTimeLineForAUser(pageNumber, pageSize);
 
             // Assert
             result.Should().BeOfType(typeof(NotFoundResult));

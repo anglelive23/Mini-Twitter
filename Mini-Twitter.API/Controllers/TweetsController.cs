@@ -1,4 +1,6 @@
-﻿namespace Mini_Twitter.API.Controllers
+﻿using Mini_Twitter.API.Authorization.Attributes;
+
+namespace Mini_Twitter.API.Controllers
 {
     [Route("api/odata")]
     [Authorize]
@@ -12,6 +14,7 @@
         [HttpGet("tweets")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [HasPermission("Tweets", "Read")]
         public async Task<IActionResult> GetAllTweets(ODataQueryOptions<TweetDto> options)
         {
             var tweets = await _mediator
@@ -22,6 +25,7 @@
         [HttpGet("tweets({key})")]
         [EnableQuery(MaxExpansionDepth = 3, PageSize = 1000)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [HasPermission("Tweets", "Read")]
         public async Task<IActionResult> GetTweetById(int key, ODataQueryOptions<TweetDto> options)
         {
             var tweet = await _mediator
