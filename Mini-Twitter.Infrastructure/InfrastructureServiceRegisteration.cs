@@ -53,7 +53,13 @@ namespace Mini_Twitter.Infrastructure
 
             #region Authoriztion Handler
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-            services.AddScoped<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            #endregion
+
+            #region Health Checks
+            services.AddHealthChecks()
+                .AddNpgSql(configuration.GetConnectionString("DefaultConnection")!, name: "PostgreSQL")
+                .AddRedis(configuration.GetConnectionString("Redis")!, name: "Redis");
             #endregion
 
             return services;

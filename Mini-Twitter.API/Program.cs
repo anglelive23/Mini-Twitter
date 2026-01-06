@@ -1,3 +1,4 @@
+using HealthChecks.UI.Client;
 using Mini_Twitter.API;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +59,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 app.UseHttpsRedirection();
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
