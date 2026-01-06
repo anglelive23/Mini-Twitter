@@ -65,5 +65,11 @@ namespace Mini_Twitter.Application.Common
             PageSize = pageSize;
             TotalCount = totalCount;
         }
+
+        //public static PaginatedResult<T> Success(List<T> items, int totalItems, int pageNumber, int pageSize)
+        //    => new PaginatedResult<T>(items, pageNumber, pageSize, totalItems);
+
+        //public static PaginatedResult<T> Failure(List<T> items, int totalItems, int pageNumber, int pageSize)
+        //    => new PaginatedResult<T>(new List<T>(), 0, 0, 0);
     }
 }
