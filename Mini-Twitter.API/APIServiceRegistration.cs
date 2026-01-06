@@ -39,8 +39,8 @@
             {
                 // Dynamic according to current work env.
                 options.Configuration = builder.Environment.IsDevelopment()
-                    ? "localhost:6379,connectTimeout=2000,syncTimeout=2000,abortConnect=false"
-                    : builder.Configuration.GetConnectionString("Redis");
+                    ? builder.Configuration.GetConnectionString("Redis")
+                    : builder.Configuration.GetConnectionString("RedisContainer");
             });
             #endregion
 
