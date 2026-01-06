@@ -45,14 +45,12 @@ namespace Mini_Twitter.API.Controllers
         #region Post
         [HttpPost("tweets")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddTweet([FromBody] CreateTweetRequestDto tweetDto)
+        public async Task<IActionResult> AddTweet([FromBody] CreateTweetDto tweetDto)
         {
-            var userId = GetUserId();
-
             var tweet = await _mediator
                 .Send(new CreateTweetCommand
                 {
-                    TweetDto = new CreateTweetDto { Context = tweetDto.Context, UserId = userId }
+                    TweetDto = tweetDto
                 });
 
             if (tweet is null)
@@ -63,17 +61,13 @@ namespace Mini_Twitter.API.Controllers
 
         [HttpPost("tweets({key})/replies")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyRequestDto replyDto)
+        public async Task<IActionResult> AddReplyForTweet(int key, [FromBody] CreateReplyDto replyDto)
         {
             var reply = await _mediator
                 .Send(new CreateTweetReplyCommand
                 {
                     Id = key,
-                    ReplyDto = new CreateReplyDto
-                    {
-                        Context = replyDto.Context,
-                        UserId = GetUserId()
-                    }
+                    ReplyDto = replyDto
                 });
 
             if (reply is null)

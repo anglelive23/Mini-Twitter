@@ -1,4 +1,7 @@
-﻿namespace Mini_Twitter.Infrastructure.Repositories
+﻿using Mapster;
+using Mini_Twitter.Application.Models.Dtos;
+
+namespace Mini_Twitter.Infrastructure.Repositories
 {
     public class TimelineRepository : ITimelineRepository
     {
@@ -16,10 +19,10 @@
         #endregion
 
         #region Interface Implementation
-        public List<Tweet>? GetTimeLineForAUser(string userId, int pageNumer, int pageSize)
+        public Result<PaginatedResult<TweetDto>> GetTimeLineForAUser(string userId, int pageNumer, int pageSize)
         {
             if (!_userService.IsExistingUser(userId))
-                return null;
+                return Result.Failure<PaginatedResult<TweetDto>>(Error.NotFound("User Not Found."));
 
             var listOfFollowers = _userService.GetFollowersList(userId);
 
@@ -31,7 +34,16 @@
                 .Take(pageSize)
                 .ToList();
 
-            return timeline;
+            var count = _context.Tweets.Count(t => t.UserId == userId || listOfFollowers.Contains(t.UserId));
+
+            var paginatedResult = new PaginatedResult<TweetDto>(
+                timeline.Adapt<List<TweetDto>>(),
+                pageNumer,
+                pageSize,
+                count
+            );
+
+            return paginatedResult;
         }
         #endregion
     }

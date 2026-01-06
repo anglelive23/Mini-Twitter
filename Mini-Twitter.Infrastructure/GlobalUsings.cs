@@ -16,3 +16,4 @@ global using Mini_Twitter.Application.Models;
 global using Mini_Twitter.Infrastructure.Repositories;
 global using Mini_Twitter.Infrastructure.Services;
 global using System.Text;
+global using Mini_Twitter.Application.Common;

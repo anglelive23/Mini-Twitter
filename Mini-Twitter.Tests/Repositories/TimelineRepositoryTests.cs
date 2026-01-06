@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Mini_Twitter.Application.Abstractions;
+using Mini_Twitter.Application.Common;
+using Mini_Twitter.Application.Models.Dtos;
 using Mini_Twitter.Domain.Entities;
 using Mini_Twitter.Infrastructure;
 using Mini_Twitter.Infrastructure.Repositories;
@@ -37,7 +39,6 @@ namespace Mini_Twitter.Tests.Repositories
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().HaveCount(4); // 4 based on the fake data i made, rather comment this assert for better testability with different page/page size
         }
 
         [Theory]
@@ -52,11 +53,12 @@ namespace Mini_Twitter.Tests.Repositories
                 s => s.IsExistingUser(userId))
                 .Returns(false);
             var repo = new TimelineRepository(contextMock.Object, userServiceMock.Object);
+            var expectedResult = new Result<PaginatedResult<TweetDto>>(null, false, Error.NotFound("User Not Found."));
             // Act
             var result = repo.GetTimeLineForAUser(userId, 1, 10);
 
             // Assert
-            result.Should().BeNull();
+            result.Should().BeEquivalentTo(expectedResult);
         }
     }
 }

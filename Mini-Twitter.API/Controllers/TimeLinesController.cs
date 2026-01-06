@@ -11,10 +11,9 @@
 
         #region GET
         [HttpGet]
-        public async Task<IActionResult> GetTimeLineForAUser(int pageNumber = 1, int pageSize = 1)
+        public async Task<IActionResult> GetTimeLineForAUser(string userId, int pageNumber = 1, int pageSize = 1)
         {
-            var userId = GetUserId();
-            var timeline = await _mediator
+            var result = await _mediator
                 .Send(new GetTimeLineQuery
                 {
                     UserId = userId,
@@ -22,10 +21,10 @@
                     PageSize = pageSize
                 });
 
-            if (timeline == null)
-                return NotFound();
+            if (result.IsFailure)
+                return NotFound(result);
 
-            return Ok(timeline);
+            return Ok(result);
         }
         #endregion
     }

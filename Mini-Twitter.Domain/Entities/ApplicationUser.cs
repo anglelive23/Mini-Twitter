@@ -21,7 +21,6 @@
         {
             Followers = new List<ApplicationUser>();
             Followees = new List<ApplicationUser>();
-            //Tweets = new List<Tweet>();
             RefreshTokens = new List<RefreshToken>();
         }
     }

@@ -3,7 +3,7 @@
     public interface ITimelineRepository
     {
         #region GET
-        List<Tweet>? GetTimeLineForAUser(string userId, int pageNumer, int pageSize);
+        Result<PaginatedResult<TweetDto>> GetTimeLineForAUser(string userId, int pageNumer, int pageSize);
         #endregion
     }
 }

@@ -3,11 +3,12 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Mini_Twitter.Application.Features.Timelines.Queries.GetTimeline;
 using Mini_Twitter.API.Controllers;
+using Mini_Twitter.Application.Common;
+using Mini_Twitter.Application.Features.Timelines.Queries.GetTimeline;
+using Mini_Twitter.Application.Models.Dtos;
 using Mini_Twitter.Domain.Entities;
 using Moq;
-using Mini_Twitter.Application.Models.Dtos;
 
 namespace Mini_Twitter.Tests.Controllers
 {
@@ -22,17 +23,17 @@ namespace Mini_Twitter.Tests.Controllers
             var pageSize = 10;
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetTimeLineQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<TweetDto>());
+                .ReturnsAsync(new Result<PaginatedResult<TweetDto>>(new PaginatedResult<TweetDto>(new List<TweetDto>(), 1, 10, 0), true, null));
             var controller = new TimeLinesController(mediatorMock.Object);
-            var expectedTweets = new Mock<List<TweetDto>>();
+            var expectedPaginatedResult = new PaginatedResult<TweetDto>(new List<TweetDto>(), 1, 10, 0);
+            var expectedResult = Result.Success(expectedPaginatedResult);
 
             // Act
-            var result = await controller.GetTimeLineForAUser(pageNumber, pageSize);
-
+            var result = await controller.GetTimeLineForAUser(userId, pageNumber, pageSize);
             // Assert
-            result.Should().NotBeOfType(typeof(NotFoundResult));
+            result.Should().NotBeOfType(typeof(NotFoundObjectResult));
             result.Should().BeOfType(typeof(OkObjectResult));
-            ((OkObjectResult)result).Value.Should().BeEquivalentTo(expectedTweets.Object);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(expectedResult);
         }
 
         [Fact]
@@ -44,14 +45,14 @@ namespace Mini_Twitter.Tests.Controllers
             var pageSize = 10;
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetTimeLineQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((List<TweetDto>)null);
+                .ReturnsAsync(new Result<PaginatedResult<TweetDto>>(null, false, Error.NotFound("User Not Found.")));
             var controller = new TimeLinesController(mediatorMock.Object);
 
             // Act
             var result = await controller.GetTimeLineForAUser(pageNumber, pageSize);
 
             // Assert
-            result.Should().BeOfType(typeof(NotFoundResult));
+            result.Should().BeOfType(typeof(NotFoundObjectResult));
         }
     }
 }
